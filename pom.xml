@@ -28,8 +28,11 @@
     <properties>
         <java.version>17</java.version>
         <mybatis.version>3.0.2</mybatis.version>
-        <mysql.version>8.0.33</mysql.version>
-        <druid.version>1.2.20</druid.version>
+        <!-- 移除MySQL版本属性 -->
+        <!-- <mysql.version>8.0.33</mysql.version> -->
+        <!-- 移除Druid连接池版本属性，使用HikariCP -->
+        <!-- <druid.version>1.2.20</druid.version> -->
+        <h2.version>2.2.224</h2.version>
         <lombok.version>1.18.30</lombok.version>
     </properties>
 

@@ -5,32 +5,35 @@ spring:
   application:
     name: ScoopExercises
   datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/scoop_exercises?useSSL=false&serverTimezone=UTC&characterEncoding=utf8
-    username: root
-    password: 123456
-    druid:
-      # 连接池配置
-      initial-size: 5
-      min-idle: 5
-      max-active: 20
-      max-wait: 60000
-      # 配置检测可以关闭的空闲连接间隔时间
-      time-between-eviction-runs-millis: 60000
-      # 配置连接在池中的最小生存时间
-      min-evictable-idle-time-millis: 300000
-      validation-query: SELECT 1
-      test-while-idle: true
-      test-on-borrow: false
-      test-on-return: false
-      # 打开PSCache，并且指定每个连接上PSCache的大小
-      pool-prepared-statements: true
-      max-pool-prepared-statement-per-connection-size: 20
-      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
-      filters: stat,wall,log4j
-      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
-      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    # 使用Spring Boot默认的HikariCP连接池
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.h2.Driver
+    # H2内存数据库配置 - 使用最简单的内存模式URL
+    url: jdbc:h2:mem:scoop_exercises;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: ""
+    hikari:
+      # HikariCP连接池配置
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 300000
+      max-lifetime: 600000
+      connection-timeout: 30000
+      validation-timeout: 5000
+      leak-detection-threshold: 60000
+  # H2控制台配置
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: false
+        trace: false
+        compress: true
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:scoop_exercises.sql
 
 # MyBatis配置
 mybatis:
@@ -48,6 +51,7 @@ logging:
     com.ScoopLink: debug
     org.springframework: info
     org.mybatis: debug
+    org.h2: info
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
