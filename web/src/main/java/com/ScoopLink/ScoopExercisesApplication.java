@@ -1,9 +1,11 @@
 package com.ScoopLink;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
+@MapperScan("com.ScoopLink.user") // 扫描Mapper接口所在的包
 public class ScoopExercisesApplication {
 
     public static void main(String[] args) {

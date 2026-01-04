@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ScoopLink.multipleChoiceQuestion.MultipleChoiceQuestionMapper">
+
+    <resultMap id="MultipleChoiceQuestionMap" type="com.ScoopLink.manageQuestion.multipleChoiceQuestion.dto.MultipleChoiceQuestion">
+        <id column="id" property="id"/>
+        <result column="paper_id" property="paperId"/>
+        <result column="question_text" property="questionText"/>
+        <result column="option_a" property="optionA"/>
+        <result column="option_b" property="optionB"/>
+        <result column="option_c" property="optionC"/>
+        <result column="option_d" property="optionD"/>
+        <result column="option_e" property="optionE"/>
+        <result column="option_f" property="optionF"/>
+        <result column="correct_answer" property="correctAnswer"/>
+        <result column="explanation" property="explanation"/>
+        <result column="score" property="score"/>
+        <result column="sort_order" property="sortOrder"/>
+    </resultMap>
+
+    <!-- 插入单个选择题 -->
+    <insert id="insertMultipleChoiceQuestion" parameterType="com.ScoopLink.manageQuestion.multipleChoiceQuestion.dto.MultipleChoiceQuestion" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO multiple_choice_questions (paper_id, question_text, option_a, option_b, option_c, option_d, option_e, option_f, correct_answer, explanation, score, sort_order)
+        VALUES (#{paperId}, #{questionText}, #{optionA}, #{optionB}, #{optionC}, #{optionD}, #{optionE}, #{optionF}, #{correctAnswer}, #{explanation}, #{score}, #{sortOrder})
+    </insert>
+
+    <!-- 批量插入选择题 -->
+    <insert id="insertMultipleChoiceQuestions">
+        INSERT INTO multiple_choice_questions (paper_id, question_text, option_a, option_b, option_c, option_d, option_e, option_f, correct_answer, explanation, score, sort_order)
+        VALUES
+        <foreach collection="multipleChoiceQuestions" item="question" separator=",">
+            (#{question.paperId}, #{question.questionText}, #{question.optionA}, #{question.optionB}, #{question.optionC}, #{question.optionD}, #{question.optionE}, #{question.optionF}, #{question.correctAnswer}, #{question.explanation}, #{question.score}, #{question.sortOrder})
+        </foreach>
+    </insert>
+
+    <!-- 根据ID查询选择题 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="MultipleChoiceQuestionMap">
+        SELECT id, paper_id, question_text, option_a, option_b, option_c, option_d, option_e, option_f, correct_answer, explanation, score, sort_order
+        FROM multiple_choice_questions
+        WHERE id = #{id}
+    </select>
+
+    <!-- 更新选择题 -->
+    <update id="updateMultipleChoiceQuestion" parameterType="com.ScoopLink.manageQuestion.multipleChoiceQuestion.dto.MultipleChoiceQuestion">
+        UPDATE multiple_choice_questions
+        SET
+            paper_id = #{paperId},
+            question_text = #{questionText},
+            option_a = #{optionA},
+            option_b = #{optionB},
+            option_c = #{optionC},
+            option_d = #{optionD},
+            option_e = #{optionE},
+            option_f = #{optionF},
+            correct_answer = #{correctAnswer},
+            explanation = #{explanation},
+            score = #{score},
+            sort_order = #{sortOrder}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据ID删除选择题 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM multiple_choice_questions WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除选择题 -->
+    <delete id="deleteByIds">
+        DELETE FROM multiple_choice_questions WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

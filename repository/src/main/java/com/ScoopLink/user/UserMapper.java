@@ -2,7 +2,7 @@ package com.ScoopLink.user;
 
 
 import com.ScoopLink.auth.dto.User;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface UserMapper {
@@ -11,8 +11,7 @@ public interface UserMapper {
      * @param account 账号
      * @return 用户信息
      */
-    @Select("select * from users where account = #{account}")
-    public User getUserByAccount(String account);
+    User getUserByAccount(String account);
 
 
     /**
@@ -20,8 +19,7 @@ public interface UserMapper {
      * @param id 用户ID
      * @return 用户信息
      */
-    @Select("select * from users where id = #{id}")
-    public User getUserById(Long id);
+    User getUserById(Long id);
 
 
 
@@ -30,8 +28,7 @@ public interface UserMapper {
      * @param user 用户信息
      * @return 是否成功
      */
-    @Insert("insert into users (account, password, nickName, osIdentifier,createTime,loginTime) values (#{account}, #{password}, #{nickName}, #{osIdentifier}, #{createTime}, #{loginTime})")
-    public boolean createUser(User user);
+    boolean createUser(User user);
 
 
     /**
@@ -39,8 +36,7 @@ public interface UserMapper {
      * @param user 用户信息
      * @return 是否成功
      */
-    @Update("update users set account = #{account}, password = #{password}, nickName = #{nickName}, osIdentifier = #{osIdentifier}, createTime = #{createTime}, loginTime = #{loginTime} where id = #{id}")
-    public boolean updateUser(User user);
+    boolean updateUser(User user);
 
 
 
@@ -49,7 +45,5 @@ public interface UserMapper {
      * @param id 用户ID
      * @return 是否成功
      */
-    @Delete("delete from users where id = #{id}")
-    public boolean deleteUser(Long id);
-
+    boolean deleteUser(Long id);
 }

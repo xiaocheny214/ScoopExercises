@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ScoopLink.analysisQuestion.AnalysisQuestionMapper">
+
+    <resultMap id="AnalysisQuestionMap" type="com.ScoopLink.manageQuestion.analysisQuestion.dto.AnalysisQuestion">
+        <id column="id" property="id"/>
+        <result column="paper_id" property="paperId"/>
+        <result column="question_text" property="questionText"/>
+        <result column="correct_answer" property="correctAnswer"/>
+        <result column="explanation" property="explanation"/>
+        <result column="score" property="score"/>
+        <result column="sort_order" property="sortOrder"/>
+    </resultMap>
+
+    <!-- 插入单个辨析题 -->
+    <insert id="insertAnalysisQuestion" parameterType="com.ScoopLink.manageQuestion.analysisQuestion.dto.AnalysisQuestion" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO analysis_questions (paper_id, question_text, correct_answer, explanation, score, sort_order)
+        VALUES (#{paperId}, #{questionText}, #{correctAnswer}, #{explanation}, #{score}, #{sortOrder})
+    </insert>
+
+    <!-- 批量插入辨析题 -->
+    <insert id="insertAnalysisQuestions">
+        INSERT INTO analysis_questions (paper_id, question_text, correct_answer, explanation, score, sort_order)
+        VALUES
+        <foreach collection="analysisQuestions" item="question" separator=",">
+            (#{question.paperId}, #{question.questionText}, #{question.correctAnswer}, #{question.explanation}, #{question.score}, #{question.sortOrder})
+        </foreach>
+    </insert>
+
+    <!-- 根据ID查询辨析题 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="AnalysisQuestionMap">
+        SELECT id, paper_id, question_text, correct_answer, explanation, score, sort_order
+        FROM analysis_questions
+        WHERE id = #{id}
+    </select>
+
+    <!-- 更新辨析题 -->
+    <update id="updateAnalysisQuestion" parameterType="com.ScoopLink.manageQuestion.analysisQuestion.dto.AnalysisQuestion">
+        UPDATE analysis_questions
+        SET
+            paper_id = #{paperId},
+            question_text = #{questionText},
+            correct_answer = #{correctAnswer},
+            explanation = #{explanation},
+            score = #{score},
+            sort_order = #{sortOrder}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据ID删除辨析题 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM analysis_questions WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除辨析题 -->
+    <delete id="deleteByIds">
+        DELETE FROM analysis_questions WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

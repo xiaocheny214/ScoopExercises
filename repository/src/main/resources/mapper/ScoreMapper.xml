@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ScoopLink.score.ScoreMapper">
+
+    <resultMap id="ScoreMap" type="com.ScoopLink.scoreCalculation.dto.Score">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="paper_id" property="paperId"/>
+        <result column="total_score_obtained" property="totalScore"/>
+        <result column="max_score" property="maxScore"/>
+        <result column="completion_time" property="createTime"/>
+    </resultMap>
+
+    <!-- 插入分数记录 -->
+    <insert id="insertScore" parameterType="com.ScoopLink.scoreCalculation.dto.Score" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO scores (user_id, paper_id, total_score_obtained, max_score, completion_time)
+        VALUES (#{userId}, #{paperId}, #{totalScore}, #{maxScore}, #{createTime})
+    </insert>
+
+    <!-- 根据ID查询分数记录 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="ScoreMap">
+        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time
+        FROM scores
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询所有分数记录 -->
+    <select id="selectAll" resultMap="ScoreMap">
+        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time
+        FROM scores
+        ORDER BY completion_time DESC
+    </select>
+
+    <!-- 更新分数记录 -->
+    <update id="updateScore" parameterType="com.ScoopLink.scoreCalculation.dto.Score">
+        UPDATE scores
+        SET
+            user_id = #{userId},
+            paper_id = #{paperId},
+            total_score_obtained = #{totalScore},
+            max_score = #{maxScore}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据ID删除分数记录 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM scores WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除分数记录 -->
+    <delete id="deleteByIds">
+        DELETE FROM scores WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

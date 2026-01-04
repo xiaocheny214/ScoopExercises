@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ScoopLink.paper.PaperMapper">
+
+    <resultMap id="PaperMap" type="com.ScoopLink.manageQuestion.papers.dto.Paper">
+        <id column="id" property="id"/>
+        <result column="bank_id" property="bankId"/>
+        <result column="title" property="title"/>
+        <result column="description" property="description"/>
+        <result column="total_score" property="totalScore"/>
+        <result column="question_count" property="questionCount"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- 插入试卷 -->
+    <insert id="insertPaper" parameterType="com.ScoopLink.manageQuestion.papers.dto.Paper" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO papers (bank_id, title, description, total_score, question_count, create_time)
+        VALUES (#{bankId}, #{title}, #{description}, #{totalScore}, #{questionCount}, #{createTime})
+    </insert>
+
+    <!-- 根据ID查询试卷 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="PaperMap">
+        SELECT id, bank_id, title, description, total_score, question_count, create_time
+        FROM papers
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询所有试卷 -->
+    <select id="selectAll" resultMap="PaperMap">
+        SELECT id, bank_id, title, description, total_score, question_count, create_time
+        FROM papers
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 更新试卷 -->
+    <update id="updatePaper" parameterType="com.ScoopLink.manageQuestion.papers.dto.Paper">
+        UPDATE papers
+        SET
+            bank_id = #{bankId},
+            title = #{title},
+            description = #{description},
+            total_score = #{totalScore},
+            question_count = #{questionCount}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据ID删除试卷 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM papers WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除试卷 -->
+    <delete id="deleteByIds">
+        DELETE FROM papers WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

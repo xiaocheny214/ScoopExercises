@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ScoopLink.user.UserMapper">
+
+    <resultMap id="UserMap" type="com.ScoopLink.auth.dto.User">
+        <id column="id" property="id"/>
+        <result column="account" property="account"/>
+        <result column="nickname" property="nickName"/>
+        <result column="password" property="password"/>
+        <result column="os_identifier" property="osIdentifier"/>
+        <result column="create_time" property="createTime"/>
+        <result column="login_time" property="loginTime"/>
+    </resultMap>
+
+    <!-- 根据账号获取用户信息 -->
+    <select id="getUserByAccount" parameterType="java.lang.String" resultMap="UserMap">
+        SELECT id, account, nickname, password, os_identifier, create_time, login_time
+        FROM users
+        WHERE account = #{account}
+    </select>
+
+    <!-- 根据ID获取用户信息 -->
+    <select id="getUserById" parameterType="java.lang.Long" resultMap="UserMap">
+        SELECT id, account, nickname, password, os_identifier, create_time, login_time
+        FROM users
+        WHERE id = #{id}
+    </select>
+
+    <!-- 创建用户 -->
+    <insert id="createUser" parameterType="com.ScoopLink.auth.dto.User">
+        INSERT INTO users (account, password, nickname, os_identifier, create_time, login_time)
+        VALUES (#{account}, #{password}, #{nickName}, #{osIdentifier}, #{createTime}, #{loginTime})
+    </insert>
+
+    <!-- 更新用户信息 -->
+    <update id="updateUser" parameterType="com.ScoopLink.auth.dto.User">
+        UPDATE users
+        SET
+            account = #{account},
+            password = #{password},
+            nickname = #{nickName},
+            os_identifier = #{osIdentifier},
+            create_time = #{createTime},
+            login_time = #{loginTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除用户 -->
+    <delete id="deleteUser" parameterType="java.lang.Long">
+        DELETE FROM users WHERE id = #{id}
+    </delete>
+
+</mapper>

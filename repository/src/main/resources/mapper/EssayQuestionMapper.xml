@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ScoopLink.essayQuestion.EssayQuestionMapper">
+
+    <resultMap id="EssayQuestionMap" type="com.ScoopLink.manageQuestion.essayQuestions.dto.EssayQuestion">
+        <id column="id" property="id"/>
+        <result column="paper_id" property="paperId"/>
+        <result column="question_text" property="questionText"/>
+        <result column="reference_answer" property="referenceAnswer"/>
+        <result column="explanation" property="explanation"/>
+        <result column="score" property="score"/>
+        <result column="sort_order" property="sortOrder"/>
+    </resultMap>
+
+    <!-- 插入单个解答题 -->
+    <insert id="insertEssayQuestion" parameterType="com.ScoopLink.manageQuestion.essayQuestions.dto.EssayQuestion" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO essay_questions (paper_id, question_text, reference_answer, explanation, score, sort_order)
+        VALUES (#{paperId}, #{questionText}, #{referenceAnswer}, #{explanation}, #{score}, #{sortOrder})
+    </insert>
+
+    <!-- 批量插入解答题 -->
+    <insert id="insertEssayQuestions">
+        INSERT INTO essay_questions (paper_id, question_text, reference_answer, explanation, score, sort_order)
+        VALUES
+        <foreach collection="essayQuestions" item="question" separator=",">
+            (#{question.paperId}, #{question.questionText}, #{question.referenceAnswer}, #{question.explanation}, #{question.score}, #{question.sortOrder})
+        </foreach>
+    </insert>
+
+    <!-- 根据ID查询解答题 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="EssayQuestionMap">
+        SELECT id, paper_id, question_text, reference_answer, explanation, score, sort_order
+        FROM essay_questions
+        WHERE id = #{id}
+    </select>
+
+    <!-- 更新解答题 -->
+    <update id="updateEssayQuestion" parameterType="com.ScoopLink.manageQuestion.essayQuestions.dto.EssayQuestion">
+        UPDATE essay_questions
+        SET
+            paper_id = #{paperId},
+            question_text = #{questionText},
+            reference_answer = #{referenceAnswer},
+            explanation = #{explanation},
+            score = #{score},
+            sort_order = #{sortOrder}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据ID删除解答题 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM essay_questions WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除解答题 -->
+    <delete id="deleteByIds">
+        DELETE FROM essay_questions WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
