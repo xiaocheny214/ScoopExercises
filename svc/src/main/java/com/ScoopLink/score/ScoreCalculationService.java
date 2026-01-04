@@ -6,6 +6,8 @@ import com.ScoopLink.manageQuestion.essayQuestions.dto.EssayQuestion;
 import com.ScoopLink.manageQuestion.essayQuestions.server.EssayQuestionServer;
 import com.ScoopLink.manageQuestion.multipleChoiceQuestion.dto.MultipleChoiceQuestion;
 import com.ScoopLink.manageQuestion.multipleChoiceQuestion.server.MultipleChoiceQuestionServer;
+import com.ScoopLink.manageQuestion.papers.dto.Paper;
+import com.ScoopLink.manageQuestion.papers.server.PaperServer;
 import com.ScoopLink.scoreCalculation.dto.Score;
 import com.ScoopLink.scoreCalculation.server.ScoreServer;
 import com.ScoopLink.userAnswers.dto.UserAnswer;
@@ -38,6 +40,9 @@ public class ScoreCalculationService implements SubmitAnswer {
     
     @Resource
     private ScoreServer scoreServer;
+
+    @Resource
+    private PaperServer paperServer;
 
 
 
@@ -330,7 +335,12 @@ public class ScoreCalculationService implements SubmitAnswer {
         List<Score> existingScores = scoreServer.GetScoreList().stream()
                 .filter(score -> score.getUserId().equals(userId) && score.getPaperId().equals(paperId))
                 .toList();
-        
+
+        //获取当前试卷的总分最大分数以及答题数量
+        Paper paper = paperServer.GetPaper(paperId);
+        int totalScore = paper.getTotalScore();
+        int questionCount = paper.getQuestionCount();
+
         Score score;
         if (existingScores.isEmpty()) {
             // 创建新的分数记录
@@ -341,8 +351,9 @@ public class ScoreCalculationService implements SubmitAnswer {
             score.setCreateTime(LocalDateTime.now());
             score.setAnsweredCount(1);
             score.setStatus(0);
+            score.setTotalCount(questionCount);
+            score.setMaxScore(totalScore);
 
-            
             scoreServer.CreateScore(score);
         } else {
             // 更新现有的分数记录
