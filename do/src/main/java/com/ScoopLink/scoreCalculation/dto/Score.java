@@ -24,7 +24,7 @@ public class Score {
     /**
      * 总分数
      */
-    private Double totalScore;
+    private Integer totalScore;
 
     /**
      * 最大分数
@@ -35,4 +35,19 @@ public class Score {
      * 创建时间
      */
     private LocalDateTime createTime;
+
+     /**
+     * 状态
+     */
+    private Integer status;
+
+     /**
+     * 已答题数
+     */
+    private Integer answeredCount;
+
+     /**
+     * 总题数
+     */
+    private Integer totalCount;
 }

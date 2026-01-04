@@ -8,7 +8,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 public class PasswordEncryptUtil {
     
-    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    // 使用延迟初始化避免潜在的FactoryBean问题
+    private static PasswordEncoder passwordEncoder;
+
+    private static PasswordEncoder getPasswordEncoder() {
+        if (passwordEncoder == null) {
+            passwordEncoder = new BCryptPasswordEncoder();
+        }
+        return passwordEncoder;
+    }
 
     /**
      * 加密密码
@@ -17,7 +25,7 @@ public class PasswordEncryptUtil {
      * @return 加密后的密码
      */
     public static String encryptPassword(String rawPassword) {
-        return passwordEncoder.encode(rawPassword);
+        return getPasswordEncoder().encode(rawPassword);
     }
 
     /**
@@ -28,7 +36,7 @@ public class PasswordEncryptUtil {
      * @return 验证结果
      */
     public static boolean verifyPassword(String rawPassword, String encodedPassword) {
-        return passwordEncoder.matches(rawPassword, encodedPassword);
+        return getPasswordEncoder().matches(rawPassword, encodedPassword);
     }
 
     /**
@@ -38,6 +46,6 @@ public class PasswordEncryptUtil {
      * @return 是否需要更新编码
      */
     public static boolean isPasswordUpdateNeeded(String encodedPassword) {
-        return passwordEncoder.upgradeEncoding(encodedPassword);
+        return getPasswordEncoder().upgradeEncoding(encodedPassword);
     }
 }

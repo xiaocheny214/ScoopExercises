@@ -1,18 +1,22 @@
 package com.ScoopLink.analysisQuestion;
 
+
 import com.ScoopLink.manageQuestion.analysisQuestion.dto.AnalysisQuestion;
 import com.ScoopLink.manageQuestion.analysisQuestion.server.AnalysisQuestionServer;
+import com.ScoopLink.analysisQuestion.AnalysisQuestionMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+
 @Service
 public class AnalysisQuestionServerImpl implements AnalysisQuestionServer {
 
     @Resource
     private AnalysisQuestionMapper analysisQuestionMapper;
+
     
     @Override
     @Transactional

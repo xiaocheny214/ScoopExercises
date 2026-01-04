@@ -9,6 +9,9 @@
         <result column="total_score_obtained" property="totalScore"/>
         <result column="max_score" property="maxScore"/>
         <result column="completion_time" property="createTime"/>
+        <result column="status" property="status"/>
+        <result column="answered_count" property="answeredCount"/>
+        <result column="total_count" property="totalCount"/>
     </resultMap>
 
     <!-- 插入分数记录 -->
@@ -38,7 +41,10 @@
             user_id = #{userId},
             paper_id = #{paperId},
             total_score_obtained = #{totalScore},
-            max_score = #{maxScore}
+            max_score = #{maxScore},
+            status = #{status},
+            answered_count = #{answeredCount},
+            total_count = #{totalCount}
         WHERE id = #{id}
     </update>
 

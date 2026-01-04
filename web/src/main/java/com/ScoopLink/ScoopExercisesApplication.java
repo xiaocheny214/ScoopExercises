@@ -4,8 +4,15 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
-@MapperScan("com.ScoopLink.user") // 扫描Mapper接口所在的包
+@SpringBootApplication(scanBasePackages = "com.ScoopLink") // 明确指定扫描包，避免不必要的组件扫描
+@MapperScan(basePackages = {
+        "com.ScoopLink.user",
+        "com.ScoopLink.multipleChoiceQuestion",
+        "com.ScoopLink.essayQuestion",
+        "com.ScoopLink.analysisQuestion",
+        "com.ScoopLink.paper",
+        "com.ScoopLink.questionBankMapper",
+        "com.ScoopLink.score"}) // 精确指定Mapper接口所在的包
 public class ScoopExercisesApplication {
 
     public static void main(String[] args) {

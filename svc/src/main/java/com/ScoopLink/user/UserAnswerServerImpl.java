@@ -51,4 +51,13 @@ public class UserAnswerServerImpl implements UserAnswersServer {
         int result = userAnswerMapper.insertUserAnswer(userAnswer);
         return result > 0;
     }
+
+    @Override
+    public boolean CreateUserAnswers(List<UserAnswer> userAnswerList) {
+        if (userAnswerList == null || userAnswerList.isEmpty()) {
+            return false;
+        }
+        int result = userAnswerMapper.insertUserAnswers(userAnswerList);
+        return result > 0;
+    }
 }

@@ -15,6 +15,14 @@ public interface UserAnswersServer {
 
 
      /**
+      * 批量创建用户答案
+      * @param userAnswerList 用户答案列表
+      * @return 是否创建成功
+      */
+     public boolean CreateUserAnswers(List<UserAnswer> userAnswerList);
+
+
+     /**
       * 获取用户答案
       * @param id 用户答案ID
       * @return 用户答案

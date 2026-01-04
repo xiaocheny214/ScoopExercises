@@ -43,7 +43,7 @@ public class UserAnswer {
     /**
      * 获得分数
      */
-    private Double scoreObtained;
+    private Integer scoreObtained;
 
     /**
      * 回答时间

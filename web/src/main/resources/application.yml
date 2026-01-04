@@ -8,8 +8,8 @@ spring:
     # 使用Spring Boot默认的HikariCP连接池
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.h2.Driver
-    # H2内存数据库配置 - 使用最简单的内存模式URL
-    url: jdbc:h2:mem:scoop_exercises;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    # H2文件数据库配置 - 使用文件模式URL，数据将持久存储
+    url: jdbc:h2:file:./data/scoop_exercises_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password: ""
     hikari:
@@ -38,12 +38,12 @@ spring:
 # MyBatis配置
 mybatis:
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.ScoopLink.entity
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
     call-setters-on-nulls: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    auto-mapping-behavior: full
 
 # 日志配置
 logging:

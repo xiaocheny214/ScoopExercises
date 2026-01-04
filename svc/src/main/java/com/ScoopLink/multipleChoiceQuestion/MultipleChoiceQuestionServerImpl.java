@@ -2,6 +2,7 @@ package com.ScoopLink.multipleChoiceQuestion;
 
 import com.ScoopLink.manageQuestion.multipleChoiceQuestion.dto.MultipleChoiceQuestion;
 import com.ScoopLink.manageQuestion.multipleChoiceQuestion.server.MultipleChoiceQuestionServer;
+import com.ScoopLink.multipleChoiceQuestion.MultipleChoiceQuestionMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

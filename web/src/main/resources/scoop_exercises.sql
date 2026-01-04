@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS user_answers (
                                             FOREIGN KEY (paper_id) REFERENCES papers(id)
 );
 
+drop table if exists scores;
 -- 分数统计表
 CREATE TABLE IF NOT EXISTS scores (
                                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -98,6 +99,9 @@ CREATE TABLE IF NOT EXISTS scores (
                                       total_score_obtained DECIMAL(6,2) DEFAULT 0,
                                       max_score INT DEFAULT 0,
                                       completion_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                      status INT DEFAULT 0 COMMENT '状态',
+                                      answered_count INT DEFAULT 0 COMMENT '已答题数',
+                                      total_count INT DEFAULT 0 COMMENT '总题数',
                                       FOREIGN KEY (user_id) REFERENCES users(id),
                                       FOREIGN KEY (paper_id) REFERENCES papers(id)
 );

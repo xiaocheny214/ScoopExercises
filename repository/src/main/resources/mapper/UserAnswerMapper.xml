@@ -19,6 +19,12 @@
         INSERT INTO user_answers (user_id, paper_id, question_type, question_id, user_answer, is_correct, score_obtained, answer_time)
         VALUES (#{userId}, #{paperId}, #{questionType}, #{questionId}, #{userAnswer}, #{correct}, #{scoreObtained}, #{answerTime})
     </insert>
+    <insert id="insertUserAnswers">
+        <foreach item="item" collection="list">
+            INSERT INTO user_answers (user_id, paper_id, question_type, question_id, user_answer, is_correct, score_obtained, answer_time)
+            VALUES (#{item.userId}, #{item.paperId}, #{item.questionType}, #{item.questionId}, #{item.userAnswer}, #{item.correct}, #{item.scoreObtained}, #{item.answerTime})
+        </foreach>
+    </insert>
 
     <!-- 根据ID查询用户答题记录 -->
     <select id="selectById" parameterType="java.lang.Long" resultMap="UserAnswerMap">

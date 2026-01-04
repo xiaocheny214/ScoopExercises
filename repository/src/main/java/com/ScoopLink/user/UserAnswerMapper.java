@@ -37,4 +37,8 @@ public interface UserAnswerMapper {
      * 批量删除用户答题记录
      */
     int deleteByIds(@Param("ids") List<Long> ids);
+    /**
+     * 批量创建用户答题记录
+     */
+    int insertUserAnswers(List<UserAnswer> userAnswerList);
 }
