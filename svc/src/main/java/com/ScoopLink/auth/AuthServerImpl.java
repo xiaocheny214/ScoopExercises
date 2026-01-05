@@ -2,6 +2,7 @@ package com.ScoopLink.auth;
 
 import com.ScoopLink.auth.dto.ResetPassword;
 import com.ScoopLink.auth.dto.User;
+import com.ScoopLink.auth.dto.UserInfo;
 import com.ScoopLink.auth.server.AuthServer;
 import com.ScoopLink.auth.server.UserServer;
 import com.ScoopLink.util.PasswordEncryptUtil;
@@ -9,6 +10,7 @@ import com.ScoopLink.util.RandomChineseNameGenerator;
 import com.ScoopLink.util.SnowflakeIdGenerator;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -33,9 +35,11 @@ public class AuthServerImpl implements AuthServer {
         if (!isStrongPassword(password)) {
             throw new IllegalArgumentException("密码必须包含大写字母、小写字母、数字和特殊字符");
         }
+
         //查询是否存在该账号
-        User user = userServer.getUserByAccount(account);
+       User user = userServer.getUserByAccount(account);
         if (user == null) {
+             user = new User();
             //判定为用户第一次登录，即创建用户
             RandomChineseNameGenerator generator =  RandomChineseNameGenerator.INSTANCE;
             user.setAccount(account);
@@ -63,7 +67,8 @@ public class AuthServerImpl implements AuthServer {
 
 
     @Override
-    public boolean ChangeUserInfo(User user) {
+    @Transactional
+    public User ChangeUserInfo(UserInfo user) {
         //校验是否存在该账号
         User existingUser = userServer.getUserByAccount(user.getAccount());
         if (existingUser == null) {
@@ -71,7 +76,8 @@ public class AuthServerImpl implements AuthServer {
         }
         //更新用户信息
         existingUser.setNickName(user.getNickName());
-        return userServer.updateUser(existingUser);
+        userServer.updateUser(existingUser);
+        return existingUser;
     }
 
     @Override
@@ -100,7 +106,7 @@ public class AuthServerImpl implements AuthServer {
 
     private boolean isStrongPassword(String password) {
         // 密码正则表达式，至少包含一个大写字母、一个小写字母、一个数字和一个特殊字符
-        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$";
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,}$";
         return password.matches(passwordRegex);
     }
 }

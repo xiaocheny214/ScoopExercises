@@ -2,6 +2,7 @@ package com.ScoopLink.auth.server;
 
 import com.ScoopLink.auth.dto.ResetPassword;
 import com.ScoopLink.auth.dto.User;
+import com.ScoopLink.auth.dto.UserInfo;
 
 public interface AuthServer {
     /**
@@ -18,7 +19,7 @@ public interface AuthServer {
      * @param user 用户信息
      * @return 是否成功
      */
-    public boolean ChangeUserInfo(User user);
+    public User ChangeUserInfo(UserInfo user);
 
 
     /**
