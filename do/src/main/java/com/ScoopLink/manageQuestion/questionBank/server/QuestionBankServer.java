@@ -1,6 +1,8 @@
 package com.ScoopLink.manageQuestion.questionBank.server;
 
 import com.ScoopLink.manageQuestion.questionBank.dto.QuestionBank;
+import com.ScoopLink.dto.PageRequest;
+import com.ScoopLink.dto.PageResponse;
 
 import java.util.List;
 
@@ -11,7 +13,7 @@ public interface QuestionBankServer {
       * @param questionBank 题库信息
       * @return 是否成功
       */
-    public boolean CreateQuestionBank(QuestionBank questionBank);
+    public QuestionBank CreateQuestionBank(QuestionBank questionBank);
 
      /**
       * 获取题库信息
@@ -25,7 +27,15 @@ public interface QuestionBankServer {
       * 获取题库列表
       * @return 题库列表
       */
-    public List<QuestionBank> GetQuestionBankList();
+     public List<QuestionBank> GetQuestionBankList();
+
+
+     /**
+      * 分页获取题库列表
+      * @param pageRequest 分页请求参数
+      * @return 分页题库列表
+      */
+     public PageResponse<QuestionBank> GetQuestionBankPage(PageRequest pageRequest);
 
 
      /**

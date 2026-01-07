@@ -1,4 +1,4 @@
-package com.ScoopLink.response;
+package com.ScoopLink.dto;
 
 import java.util.List;
 

@@ -3,11 +3,15 @@ package com.ScoopLink.questionBank;
 import com.ScoopLink.manageQuestion.questionBank.dto.QuestionBank;
 import com.ScoopLink.manageQuestion.questionBank.server.QuestionBankServer;
 import com.ScoopLink.questionBankMapper.QuestionBankMapper;
+import com.ScoopLink.dto.PageRequest;
+import com.ScoopLink.dto.PageResponse;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionBankServerImpl implements QuestionBankServer {
@@ -22,9 +26,14 @@ public class QuestionBankServerImpl implements QuestionBankServer {
 
     @Override
     @Transactional
-    public boolean CreateQuestionBank(QuestionBank questionBank) {
+    public QuestionBank CreateQuestionBank(QuestionBank questionBank) {
+
+        questionBank.setCreateTime(LocalDateTime.now());
         int result = questionBankMapper.insertQuestionBank(questionBank);
-        return result > 0;
+        if (result > 0) {
+            return questionBank;
+        }
+        return new QuestionBank();
     }
 
     @Override
@@ -33,23 +42,53 @@ public class QuestionBankServerImpl implements QuestionBankServer {
     }
 
     @Override
-    @Transactional
-    public boolean UpdateQuestionBank(QuestionBank questionBankServer) {
-        int result = questionBankMapper.updateQuestionBank(questionBankServer);
+    public PageResponse<QuestionBank> GetQuestionBankPage(PageRequest pageRequest) {
+        // 计算偏移量
+        int offset = pageRequest.getPage() * pageRequest.getSize();
+        
+        // 获取总数
+        int total = questionBankMapper.countAll();
+        
+        // 获取分页数据
+        List<QuestionBank> banks = questionBankMapper.selectWithPaging(offset, pageRequest.getSize());
+        
+        // 创建并返回分页响应
+        return PageResponse.of(pageRequest.getPage(), pageRequest.getSize(), total, banks);
+    }
+
+    @Override
+    @Transactional(rollbackFor =Exception.class)
+    public boolean UpdateQuestionBank(QuestionBank questionBank) {
+        // 检查是否存在该题库
+        QuestionBank bank = questionBankMapper.selectById(questionBank.getId());
+        if (bank == null) {
+            return false;
+        }
+        int result = questionBankMapper.updateQuestionBank(questionBank);
         return result > 0;
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor =Exception.class)
     public boolean DeleteQuestionBank(Long id) {
+        // 检查是否存在该题库
+        QuestionBank bank = questionBankMapper.selectById(id);
+        if (bank == null) {
+            return false;
+        }
         int result = questionBankMapper.deleteById(id);
         return result > 0;
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor =Exception.class)
     public boolean DeleteQuestionBankList(List<Long> ids) {
-        int result = questionBankMapper.deleteByIds(ids);
+        // 批量删除题库
+        // 过滤查不到的id
+        List<Long> existIds = ids.stream()
+                .filter(id -> questionBankMapper.selectById(id) != null)
+                .collect(Collectors.toList());
+       int result = questionBankMapper.deleteByIds(existIds);
         return result > 0;
     }
 }

@@ -24,6 +24,16 @@ public interface QuestionBankMapper {
     List<QuestionBank> selectAll();
 
     /**
+     * 分页查询题库
+     */
+    List<QuestionBank> selectWithPaging(@Param("offset") int offset, @Param("size") int size);
+
+    /**
+     * 获取题库总数
+     */
+    int countAll();
+
+    /**
      * 更新题库
      */
     int updateQuestionBank(QuestionBank questionBank);

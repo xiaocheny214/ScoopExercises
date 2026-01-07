@@ -30,6 +30,19 @@
         ORDER BY create_time DESC
     </select>
 
+    <!-- 分页查询题库 -->
+    <select id="selectWithPaging" resultMap="QuestionBankMap">
+        SELECT id, name, description, creator_id, create_time
+        FROM question_banks
+        ORDER BY create_time DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <!-- 获取题库总数 -->
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM question_banks
+    </select>
+
     <!-- 更新题库 -->
     <update id="updateQuestionBank" parameterType="com.ScoopLink.manageQuestion.questionBank.dto.QuestionBank">
         UPDATE question_banks
