@@ -16,12 +16,13 @@
         <result column="explanation" property="explanation"/>
         <result column="score" property="score"/>
         <result column="sort_order" property="sortOrder"/>
+        <result column="question_type_id" property="questionTypeId"/>
     </resultMap>
 
     <!-- 插入单个选择题 -->
     <insert id="insertMultipleChoiceQuestion" parameterType="com.ScoopLink.manageQuestion.multipleChoiceQuestion.dto.MultipleChoiceQuestion" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO multiple_choice_questions (paper_id, question_text, option_a, option_b, option_c, option_d, option_e, option_f, correct_answer, explanation, score, sort_order)
-        VALUES (#{paperId}, #{questionText}, #{optionA}, #{optionB}, #{optionC}, #{optionD}, #{optionE}, #{optionF}, #{correctAnswer}, #{explanation}, #{score}, #{sortOrder})
+        INSERT INTO multiple_choice_questions (paper_id, question_text, option_a, option_b, option_c, option_d, option_e, option_f, correct_answer, explanation, score, sort_order, question_type_id)
+        VALUES (#{paperId}, #{questionText}, #{optionA}, #{optionB}, #{optionC}, #{optionD}, #{optionE}, #{optionF}, #{correctAnswer}, #{explanation}, #{score}, #{sortOrder}, #{questionTypeId})
     </insert>
 
     <!-- 批量插入选择题 -->
@@ -29,15 +30,23 @@
         INSERT INTO multiple_choice_questions (paper_id, question_text, option_a, option_b, option_c, option_d, option_e, option_f, correct_answer, explanation, score, sort_order)
         VALUES
         <foreach collection="multipleChoiceQuestions" item="question" separator=",">
-            (#{question.paperId}, #{question.questionText}, #{question.optionA}, #{question.optionB}, #{question.optionC}, #{question.optionD}, #{question.optionE}, #{question.optionF}, #{question.correctAnswer}, #{question.explanation}, #{question.score}, #{question.sortOrder})
+            (#{question.paperId}, #{question.questionText}, #{question.optionA}, #{question.optionB}, #{question.optionC}, #{question.optionD}, #{question.optionE}, #{question.optionF}, #{question.correctAnswer}, #{question.explanation}, #{question.score}, #{question.sortOrder}, #{question.questionTypeId})
         </foreach>
     </insert>
 
     <!-- 根据ID查询选择题 -->
     <select id="selectById" parameterType="java.lang.Long" resultMap="MultipleChoiceQuestionMap">
-        SELECT id, paper_id, question_text, option_a, option_b, option_c, option_d, option_e, option_f, correct_answer, explanation, score, sort_order
+        SELECT id, paper_id, question_text, option_a, option_b, option_c, option_d, option_e, option_f, correct_answer, explanation, score, sort_order, question_type_id
         FROM multiple_choice_questions
         WHERE id = #{id}
+    </select>
+
+    <!-- 根据试卷ID查询选择题 -->
+    <select id="selectByPaperId" parameterType="java.lang.Long" resultMap="MultipleChoiceQuestionMap">
+        SELECT id, paper_id, question_text, option_a, option_b, option_c, option_d, option_e, option_f, correct_answer, explanation, score, sort_order
+        FROM multiple_choice_questions
+        WHERE paper_id = #{paperId}
+        ORDER BY sort_order ASC
     </select>
 
     <!-- 更新选择题 -->
@@ -55,7 +64,8 @@
             correct_answer = #{correctAnswer},
             explanation = #{explanation},
             score = #{score},
-            sort_order = #{sortOrder}
+            sort_order = #{sortOrder},
+            question_type_id = #{questionTypeId}
         WHERE id = #{id}
     </update>
 

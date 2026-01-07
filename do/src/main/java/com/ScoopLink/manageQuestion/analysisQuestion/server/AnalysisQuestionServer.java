@@ -25,7 +25,12 @@ public interface AnalysisQuestionServer {
        */
     public AnalysisQuestion GetAnalysisQuestion(Long id);
 
-
+    /**
+     * 根据试卷ID获取辨析题列表
+     * @param paperId 试卷ID
+     * @return 辨析题列表
+     */
+    public List<AnalysisQuestion> GetAnalysisQuestionsByPaperId(Long paperId);
       /**
        * 更新分析题
        * @param analysisQuestion 分析题信息

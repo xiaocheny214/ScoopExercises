@@ -12,7 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         "com.ScoopLink.analysisQuestion",
         "com.ScoopLink.paper",
         "com.ScoopLink.questionBankMapper",
-        "com.ScoopLink.score"}) // 精确指定Mapper接口所在的包
+        "com.ScoopLink.score",
+        "com.ScoopLink.question"}) // 添加question包扫描
 public class ScoopExercisesApplication {
 
     public static void main(String[] args) {

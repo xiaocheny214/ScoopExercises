@@ -22,6 +22,10 @@ public interface AnalysisQuestionMapper {
      * 根据ID获取辨析题
      */
     AnalysisQuestion selectById(@Param("id") Long id);
+    /**
+     * 根据试卷ID获取辨析题列表
+     */
+    List<AnalysisQuestion> selectByPaperId(@Param("paperId") Long paperId);
 
     /**
      * 更新辨析题

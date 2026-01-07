@@ -26,7 +26,12 @@ public interface EssayQuestionServer {
       */
     public EssayQuestion GetEssayQuestion(Long id);
 
-
+    /**
+     * 根据试卷ID获取解答题列表
+     * @param paperId 试卷ID
+     * @return 解答题列表
+     */
+    public List<EssayQuestion> GetEssayQuestionsByPaperId(Long paperId);
      /**
       * 更新问答题
       * @param essayQuestion 问答题信息

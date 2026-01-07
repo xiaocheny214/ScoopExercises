@@ -29,6 +29,12 @@ public class QuestionBankServerImpl implements QuestionBankServer {
     public QuestionBank CreateQuestionBank(QuestionBank questionBank) {
 
         questionBank.setCreateTime(LocalDateTime.now());
+
+        // 设置创建者ID - 这里需要从当前登录用户获取，暂时使用默认值1
+        // TODO: 从认证信息中获取当前用户ID
+        if (questionBank.getCreatorId() == null) {
+            questionBank.setCreatorId(1L); // 临时使用默认值
+        }
         int result = questionBankMapper.insertQuestionBank(questionBank);
         if (result > 0) {
             return questionBank;

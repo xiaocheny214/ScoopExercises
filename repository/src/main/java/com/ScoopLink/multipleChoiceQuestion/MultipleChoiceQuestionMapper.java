@@ -23,6 +23,12 @@ public interface MultipleChoiceQuestionMapper {
      */
     MultipleChoiceQuestion selectById(@Param("id") Long id);
 
+
+    /**
+     * 根据试卷ID获取选择题列表
+     */
+    List<MultipleChoiceQuestion> selectByPaperId(@Param("paperId") Long paperId);
+
     /**
      * 更新选择题
      */

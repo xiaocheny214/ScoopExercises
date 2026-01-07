@@ -9,7 +9,7 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.h2.Driver
     # H2文件数据库配置 - 使用文件模式URL，数据将持久存储
-    url: jdbc:h2:file:./data/scoop_exercises_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:file:./data/scoop_exercises_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;FILE_LOCK=NO
     username: sa
     password: ""
     hikari:

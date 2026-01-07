@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS multiple_choice_questions (
                                                          sort_order INT DEFAULT 0,
                                                          FOREIGN KEY (paper_id) REFERENCES papers(id)
 );
+alter table multiple_choice_questions add column question_type_id BIGINT DEFAULT 1 COMMENT '题目类型ID，默认1为单选题';
 
 -- 辨析题表
 CREATE TABLE IF NOT EXISTS analysis_questions (
@@ -64,6 +65,7 @@ CREATE TABLE IF NOT EXISTS analysis_questions (
                                                   sort_order INT DEFAULT 0,
                                                   FOREIGN KEY (paper_id) REFERENCES papers(id)
 );
+alter table analysis_questions add column question_type_id BIGINT DEFAULT 2 COMMENT '题目类型ID，默认2为辨析题';
 
 -- 解答题表
 CREATE TABLE IF NOT EXISTS essay_questions (
@@ -76,6 +78,7 @@ CREATE TABLE IF NOT EXISTS essay_questions (
                                                sort_order INT DEFAULT 0,
                                                FOREIGN KEY (paper_id) REFERENCES papers(id)
 );
+alter table essay_questions add column question_type_id BIGINT DEFAULT 3 COMMENT '题目类型ID，默认3为解答题';
 
 -- 用户答题记录表
 CREATE TABLE IF NOT EXISTS user_answers (
@@ -107,3 +110,26 @@ CREATE TABLE IF NOT EXISTS scores (
                                       FOREIGN KEY (user_id) REFERENCES users(id),
                                       FOREIGN KEY (paper_id) REFERENCES papers(id)
 );
+
+-- 题目类型表
+CREATE TABLE IF NOT EXISTS question_types (
+                                              id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                              type_code VARCHAR(50) NOT NULL UNIQUE COMMENT '题目类型代码，如MULTIPLE_CHOICE, ANALYSIS, ESSAY',
+                                              type_name VARCHAR(100) NOT NULL COMMENT '题目类型名称',
+                                              description TEXT COMMENT '题目类型描述',
+                                              icon VARCHAR(100) COMMENT '类型图标',
+                                              sort_order INT DEFAULT 0 COMMENT '排序',
+                                              is_active BOOLEAN DEFAULT TRUE COMMENT '是否启用',
+                                              create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                              update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 插入默认的题目类型
+INSERT INTO question_types (type_code, type_name, description, icon, sort_order, is_active) VALUES
+                                                                                                ('MULTIPLE_CHOICE', '选择题', 'Multiple Choice Question', 'mcq-icon', 1, TRUE),
+                                                                                                ('ANALYSIS', '分析题', 'Analysis Question', 'analysis-icon', 2, TRUE),
+                                                                                                ('ESSAY', '解答题', 'Essay Question', 'essay-icon', 3, TRUE);
+
+-- 插入默认的管理员用户（密码为123456的BCrypt加密值）
+INSERT INTO users (account, nickname, password) VALUES
+    ('admin@example.com', '系统管理员', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVwE.');

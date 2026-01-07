@@ -13,7 +13,12 @@ public interface MultipleChoiceQuestionServer {
       */
     public boolean CreateMultipleChoiceQuestion(MultipleChoiceQuestion multipleChoiceQuestion);
 
-
+    /**
+     * 根据试卷ID获取选择题列表
+     * @param paperId 试卷ID
+     * @return 选择题列表
+     */
+    public List<MultipleChoiceQuestion> GetMultipleChoiceQuestionsByPaperId(Long paperId);
     /**
      * 批量创建多选题
      * @param multipleChoiceQuestions 多选题列表

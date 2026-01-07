@@ -10,26 +10,33 @@
         <result column="explanation" property="explanation"/>
         <result column="score" property="score"/>
         <result column="sort_order" property="sortOrder"/>
+        <result column="question_type_id" property="questionTypeId"/>
     </resultMap>
 
     <!-- 插入单个辨析题 -->
     <insert id="insertAnalysisQuestion" parameterType="com.ScoopLink.manageQuestion.analysisQuestion.dto.AnalysisQuestion" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO analysis_questions (paper_id, question_text, correct_answer, explanation, score, sort_order)
-        VALUES (#{paperId}, #{questionText}, #{correctAnswer}, #{explanation}, #{score}, #{sortOrder})
+        INSERT INTO analysis_questions (paper_id, question_text, correct_answer, explanation, score, sort_order, question_type_id)
+        VALUES (#{paperId}, #{questionText}, #{correctAnswer}, #{explanation}, #{score}, #{sortOrder}, #{questionTypeId})
     </insert>
 
     <!-- 批量插入辨析题 -->
     <insert id="insertAnalysisQuestions">
-        INSERT INTO analysis_questions (paper_id, question_text, correct_answer, explanation, score, sort_order)
+        INSERT INTO analysis_questions (paper_id, question_text, correct_answer, explanation, score, sort_order, question_type_id)
         VALUES
         <foreach collection="analysisQuestions" item="question" separator=",">
-            (#{question.paperId}, #{question.questionText}, #{question.correctAnswer}, #{question.explanation}, #{question.score}, #{question.sortOrder})
+            (#{question.paperId}, #{question.questionText}, #{question.correctAnswer}, #{question.explanation}, #{question.score}, #{question.sortOrder}, #{question.questionTypeId})
         </foreach>
     </insert>
-
+    <!-- 根据试卷ID查询辨析题 -->
+    <select id="selectByPaperId" parameterType="java.lang.Long" resultMap="AnalysisQuestionMap">
+        SELECT id, paper_id, question_text, correct_answer, explanation, score, sort_order
+        FROM analysis_questions
+        WHERE paper_id = #{paperId}
+        ORDER BY sort_order ASC
+    </select>
     <!-- 根据ID查询辨析题 -->
     <select id="selectById" parameterType="java.lang.Long" resultMap="AnalysisQuestionMap">
-        SELECT id, paper_id, question_text, correct_answer, explanation, score, sort_order
+        SELECT id, paper_id, question_text, correct_answer, explanation, score, sort_order, question_type_id
         FROM analysis_questions
         WHERE id = #{id}
     </select>
@@ -43,7 +50,8 @@
             correct_answer = #{correctAnswer},
             explanation = #{explanation},
             score = #{score},
-            sort_order = #{sortOrder}
+            sort_order = #{sortOrder},
+            question_type_id = #{questionTypeId}
         WHERE id = #{id}
     </update>
 

@@ -42,6 +42,11 @@ public class EssayQuestionsServerImpl implements EssayQuestionServer {
     }
 
     @Override
+    public List<EssayQuestion> GetEssayQuestionsByPaperId(Long paperId) {
+        return essayQuestionMapper.selectByPaperId(paperId);
+    }
+
+    @Override
     @Transactional
     public boolean DeleteEssayQuestion(Long id) {
         int result = essayQuestionMapper.deleteById(id);

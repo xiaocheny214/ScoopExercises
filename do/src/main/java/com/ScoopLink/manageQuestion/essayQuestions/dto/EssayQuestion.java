@@ -36,4 +36,9 @@ public class EssayQuestion {
      * 排序顺序
      */
     private Integer sortOrder;
+
+     /**
+     * 题目类型ID
+     */
+    private Integer questionTypeId;
 }

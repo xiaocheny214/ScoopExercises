@@ -36,4 +36,7 @@ public class AnalysisQuestion {
      * 排序顺序
      */
     private Integer sortOrder;
+
+
+    private Integer questionTypeId;
 }

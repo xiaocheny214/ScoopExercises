@@ -52,6 +52,11 @@ public class AnalysisQuestionServerImpl implements AnalysisQuestionServer {
     }
 
     @Override
+    public List<AnalysisQuestion> GetAnalysisQuestionsByPaperId(Long paperId) {
+        return analysisQuestionMapper.selectByPaperId(paperId);
+    }
+
+    @Override
     @Transactional
     public boolean DeleteAnalysisQuestionList(List<Long> ids) {
         int result = analysisQuestionMapper.deleteByIds(ids);

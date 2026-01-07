@@ -47,6 +47,10 @@ public class MultipleChoiceQuestionServerImpl implements MultipleChoiceQuestionS
         int result = multipleChoiceQuestionMapper.deleteById(id);
         return result > 0;
     }
+    @Override
+    public List<MultipleChoiceQuestion> GetMultipleChoiceQuestionsByPaperId(Long paperId) {
+        return multipleChoiceQuestionMapper.selectByPaperId(paperId);
+    }
 
     @Override
     @Transactional

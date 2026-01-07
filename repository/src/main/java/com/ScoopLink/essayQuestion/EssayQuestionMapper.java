@@ -22,6 +22,10 @@ public interface EssayQuestionMapper {
      * 根据ID获取解答题
      */
     EssayQuestion selectById(@Param("id") Long id);
+    /**
+     * 根据试卷ID获取解答题列表
+     */
+    List<EssayQuestion> selectByPaperId(@Param("paperId") Long paperId);
 
     /**
      * 更新解答题

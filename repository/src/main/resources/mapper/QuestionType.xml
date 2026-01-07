@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ScoopLink.questionType.QuestionTypeMapper">
+
+    <resultMap id="QuestionTypeMap" type="com.ScoopLink.manageQuestion.question.dto.QuestionType">
+        <result property="id" column="id"/>
+        <result property="typeCode" column="type_code"/>
+        <result property="typeName" column="type_name"/>
+        <result property="description" column="description"/>
+        <result property="icon" column="icon"/>
+        <result property="sortOrder" column="sort_order"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <insert id="insertQuestionType" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO question_types (type_code, type_name, description, icon, sort_order, is_active, create_time, update_time)
+        VALUES (#{typeCode}, #{typeName}, #{description}, #{icon}, #{sortOrder}, #{isActive}, NOW(), NOW())
+    </insert>
+
+    <select id="selectById" parameterType="java.lang.Long" resultMap="QuestionTypeMap">
+        SELECT id, type_code, type_name, description, icon, sort_order, is_active, create_time, update_time
+        FROM question_types
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="QuestionTypeMap">
+        SELECT id, type_code, type_name, description, icon, sort_order, is_active, create_time, update_time
+        FROM question_types
+        ORDER BY sort_order, id
+    </select>
+
+    <select id="selectByTypeCode" parameterType="java.lang.String" resultMap="QuestionTypeMap">
+        SELECT id, type_code, type_name, description, icon, sort_order, is_active, create_time, update_time
+        FROM question_types
+        WHERE type_code = #{typeCode}
+    </select>
+
+    <select id="selectActiveTypes" resultMap="QuestionTypeMap">
+        SELECT id, type_code, type_name, description, icon, sort_order, is_active, create_time, update_time
+        FROM question_types
+        WHERE is_active = TRUE
+        ORDER BY sort_order, id
+    </select>
+
+    <update id="updateQuestionType" parameterType="com.ScoopLink.manageQuestion.question.dto.QuestionType">
+        UPDATE question_types
+        <set>
+            <if test="typeCode != null">type_code = #{typeCode},</if>
+            <if test="typeName != null">type_name = #{typeName},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="isActive != null">is_active = #{isActive},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM question_types
+        WHERE id = #{id}
+    </delete>
+
+</mapper>
