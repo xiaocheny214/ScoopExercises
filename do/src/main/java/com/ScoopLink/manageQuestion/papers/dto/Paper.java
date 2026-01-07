@@ -1,12 +1,19 @@
 package com.ScoopLink.manageQuestion.papers.dto;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class Paper {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Paper implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Long id;
 

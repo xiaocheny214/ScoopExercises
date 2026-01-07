@@ -38,8 +38,8 @@ public class PaperImportServerImpl implements PaperImportServer {
         try {
             // 1. 创建试卷
             Paper paper = importTemplate.getPaperInfo();
-            boolean paperCreated = paperServer.CreatePaper(paper);
-            if (!paperCreated) {
+            Paper createdPaper = paperServer.CreatePaper(paper);
+            if (createdPaper == null) {
                 return false;
             }
 

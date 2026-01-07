@@ -1,6 +1,7 @@
 package com.ScoopLink.manageQuestion.papers.server;
 
 import com.ScoopLink.manageQuestion.papers.dto.Paper;
+
 import java.util.List;
 
 public interface PaperServer {
@@ -10,7 +11,7 @@ public interface PaperServer {
       * @param paper 试卷信息
       * @return 是否成功
       */
-    public boolean CreatePaper(Paper paper);
+    public Paper CreatePaper(Paper paper);
 
      /**
       * 获取试卷信息
@@ -32,7 +33,7 @@ public interface PaperServer {
       * @param paper 试卷信息
       * @return 是否成功
       */
-    public boolean UpdatePaper(Paper paper);
+    public Paper UpdatePaper(Paper paper);
 
 
      /**
