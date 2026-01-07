@@ -58,14 +58,16 @@ public class QuestionBankServerImpl implements QuestionBankServer {
 
     @Override
     @Transactional(rollbackFor =Exception.class)
-    public boolean UpdateQuestionBank(QuestionBank questionBank) {
+    public QuestionBank UpdateQuestionBank(QuestionBank questionBank) {
         // 检查是否存在该题库
         QuestionBank bank = questionBankMapper.selectById(questionBank.getId());
         if (bank == null) {
-            return false;
+            return new QuestionBank();
         }
+        // 更新题库信息
+        questionBank.setCreatorId(bank.getCreatorId());
         int result = questionBankMapper.updateQuestionBank(questionBank);
-        return result > 0;
+        return result > 0 ? questionBank : new QuestionBank();
     }
 
     @Override

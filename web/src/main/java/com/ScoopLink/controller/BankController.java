@@ -71,9 +71,9 @@ public class BankController {
      * @return 是否成功
      */
     @PutMapping("/update")
-    public CommonResponse<Boolean> updateQuestionBank(@RequestBody QuestionBank questionBank){
-        boolean success = questionBankServer.UpdateQuestionBank(questionBank);
-        return CommonResponse.success(success);
+    public CommonResponse<QuestionBank> updateQuestionBank(@RequestBody QuestionBank questionBank){
+        QuestionBank bank = questionBankServer.UpdateQuestionBank(questionBank);
+        return CommonResponse.success(bank);
     }
 
     /**

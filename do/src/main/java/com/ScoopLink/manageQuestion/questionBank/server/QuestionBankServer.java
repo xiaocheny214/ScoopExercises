@@ -40,10 +40,10 @@ public interface QuestionBankServer {
 
      /**
       * 更新题库信息
-      * @param questionBankServer 题库信息
+      * @param questionBank 题库信息
       * @return 是否成功
       */
-    public boolean UpdateQuestionBank(QuestionBank questionBankServer);
+    public QuestionBank UpdateQuestionBank(QuestionBank questionBank);
 
 
      /**
