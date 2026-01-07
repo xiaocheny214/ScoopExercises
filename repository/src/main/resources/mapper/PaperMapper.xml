@@ -9,25 +9,27 @@
         <result column="description" property="description"/>
         <result column="total_score" property="totalScore"/>
         <result column="question_count" property="questionCount"/>
+        <result column="time_limit" property="timeLimit"/>
         <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
     </resultMap>
 
     <!-- 插入试卷 -->
     <insert id="insertPaper" parameterType="com.ScoopLink.manageQuestion.papers.dto.Paper" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO papers (bank_id, title, description, total_score, question_count, create_time)
-        VALUES (#{bankId}, #{title}, #{description}, #{totalScore}, #{questionCount}, #{createTime})
+        INSERT INTO papers (bank_id, title, description, total_score, question_count, time_limit, create_time, update_time)
+        VALUES (#{bankId}, #{title}, #{description}, #{totalScore}, #{questionCount}, #{timeLimit}, #{createTime}, #{updateTime})
     </insert>
 
     <!-- 根据ID查询试卷 -->
     <select id="selectById" parameterType="java.lang.Long" resultMap="PaperMap">
-        SELECT id, bank_id, title, description, total_score, question_count, create_time
+        SELECT id, bank_id, title, description, total_score, question_count, time_limit, create_time, update_time
         FROM papers
         WHERE id = #{id}
     </select>
 
     <!-- 查询所有试卷 -->
     <select id="selectAll" resultMap="PaperMap">
-        SELECT id, bank_id, title, description, total_score, question_count, create_time
+        SELECT id, bank_id, title, description, total_score, question_count, time_limit, create_time, update_time
         FROM papers
         ORDER BY create_time DESC
     </select>
@@ -40,7 +42,9 @@
             title = #{title},
             description = #{description},
             total_score = #{totalScore},
-            question_count = #{questionCount}
+            question_count = #{questionCount},
+            time_limit = #{timeLimit},
+            update_time = #{updateTime}
         WHERE id = #{id}
     </update>
 

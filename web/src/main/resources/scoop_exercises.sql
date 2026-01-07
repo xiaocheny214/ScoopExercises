@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS papers (
                                       total_score INT DEFAULT 0,
                                       question_count INT DEFAULT 0,
                                       create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                      time_limit INT DEFAULT 0,
+                                      update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                                       FOREIGN KEY (bank_id) REFERENCES question_banks(id)
 );
 

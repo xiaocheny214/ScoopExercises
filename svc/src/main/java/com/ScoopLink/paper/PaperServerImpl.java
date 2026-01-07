@@ -23,6 +23,7 @@ public class PaperServerImpl implements PaperServer {
     @Transactional(noRollbackFor = IllegalArgumentException.class)
     public Paper CreatePaper(Paper paper) {
         paper.setCreateTime(LocalDateTime.now());
+        paper.setUpdateTime(LocalDateTime.now());
         //查询一下试卷库是否存在
         QuestionBank questionBank = questionBankServer.GetQuestionBank(paper.getBankId());
         if (questionBank == null) {
@@ -56,8 +57,10 @@ public class PaperServerImpl implements PaperServer {
             throw new IllegalArgumentException("试卷不存在");
         }
         paper.setCreateTime(oldPaper.getCreateTime());
+        paper.setUpdateTime(LocalDateTime.now());
         paper.setTotalScore(oldPaper.getTotalScore());
         paper.setQuestionCount(oldPaper.getQuestionCount());
+        paper.setTimeLimit(oldPaper.getTimeLimit());
         int result = paperMapper.updatePaper(paper);
         return result > 0 ? paper : null;
     }

@@ -43,8 +43,18 @@ public class Paper implements Serializable {
     private Integer questionCount;
 
     /**
+     * 试卷时间限制（单位：分钟）
+     */
+    private Integer timeLimit;
+
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;
+
+     /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
 }
