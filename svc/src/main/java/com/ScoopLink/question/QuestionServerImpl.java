@@ -365,17 +365,35 @@ public class QuestionServerImpl implements QuestionServer {
         if (paper == null) {
             return false;
         }
-        paper.setQuestionCount(Math.max(0, paper.getQuestionCount()) + questionCount);
-        paper.setTotalScore(Math.max(0, paper.getTotalScore()) + score);
+        // 安全地处理可能为null的字段
+        Integer currentQuestionCount = paper.getQuestionCount();
+        Integer currentTotalScore = paper.getTotalScore();
+
+        // 使用默认值0处理null情况
+        int newQuestionCount = (currentQuestionCount != null ? currentQuestionCount : 0) + questionCount;
+        int newTotalScore = (currentTotalScore != null ? currentTotalScore : 0) + score;
+
+        // 确保计数不为负数
+        newQuestionCount = Math.max(0, newQuestionCount);
+        newTotalScore = Math.max(0, newTotalScore);
+
+        paper.setQuestionCount(newQuestionCount);
+        paper.setTotalScore(newTotalScore);
+
         // 更新试卷
-        paperServer.UpdatePaper(paper);
-        return true;
+        Paper updatedPaper = paperServer.UpdatePaper(paper);
+        return updatedPaper != null;
     }
 
     private QuestionResponse updateMultipleChoiceQuestion(QuestionRequest request, QuestionType questionType) {
         MultipleChoiceQuestion mcq = multipleChoiceQuestionServer.GetMultipleChoiceQuestion(request.getId());
         if (mcq == null) {
             return createErrorResponse("题目不存在");
+        }
+        // 更新对应paper的题目数量和总分数
+        boolean success = updatePaperQuestionCountAndScore(request.getPaperId(), 0, request.getScore() - mcq.getScore());
+        if (!success) {
+            return createErrorResponse("更新试卷题目数量和总分数失败");
         }
 
         // 更新字段
@@ -395,7 +413,7 @@ public class QuestionServerImpl implements QuestionServer {
             if (extra.get("explanation") != null) mcq.setExplanation((String) extra.get("explanation"));
         }
 
-        boolean success = multipleChoiceQuestionServer.UpdateMultipleChoiceQuestion(mcq);
+        success = multipleChoiceQuestionServer.UpdateMultipleChoiceQuestion(mcq);
         return convertToResponse(mcq, questionType, success);
     }
 
@@ -403,6 +421,11 @@ public class QuestionServerImpl implements QuestionServer {
         AnalysisQuestion aq = analysisQuestionServer.GetAnalysisQuestion(request.getId());
         if (aq == null) {
             return createErrorResponse("题目不存在");
+        }
+        // 更新对应paper的题目数量和总分数
+        boolean success = updatePaperQuestionCountAndScore(request.getPaperId(), 0, request.getScore() - aq.getScore());
+        if (!success) {
+            return createErrorResponse("更新试卷题目数量和总分数失败");
         }
 
         if (request.getQuestionText() != null) aq.setQuestionText(request.getQuestionText());
@@ -415,7 +438,7 @@ public class QuestionServerImpl implements QuestionServer {
             if (extra.get("explanation") != null) aq.setExplanation((String) extra.get("explanation"));
         }
 
-        boolean success = analysisQuestionServer.UpdateAnalysisQuestion(aq);
+        success = analysisQuestionServer.UpdateAnalysisQuestion(aq);
         return convertToResponse(aq, questionType, success);
     }
 
@@ -423,6 +446,11 @@ public class QuestionServerImpl implements QuestionServer {
         EssayQuestion eq = essayQuestionServer.GetEssayQuestion(request.getId());
         if (eq == null) {
             return createErrorResponse("题目不存在");
+        }
+        // 更新对应paper的题目数量和总分数
+        boolean success = updatePaperQuestionCountAndScore(request.getPaperId(), 0, request.getScore() - eq.getScore());
+        if (!success) {
+            return createErrorResponse("更新试卷题目数量和总分数失败");
         }
 
         if (request.getQuestionText() != null) eq.setQuestionText(request.getQuestionText());
@@ -435,7 +463,7 @@ public class QuestionServerImpl implements QuestionServer {
             if (extra.get("explanation") != null) eq.setExplanation((String) extra.get("explanation"));
         }
 
-        boolean success = essayQuestionServer.UpdateEssayQuestion(eq);
+        success = essayQuestionServer.UpdateEssayQuestion(eq);
         return convertToResponse(eq, questionType, success);
     }
 
