@@ -6,6 +6,8 @@ import com.ScoopLink.manageQuestion.essayQuestions.dto.EssayQuestion;
 import com.ScoopLink.manageQuestion.essayQuestions.server.EssayQuestionServer;
 import com.ScoopLink.manageQuestion.multipleChoiceQuestion.dto.MultipleChoiceQuestion;
 import com.ScoopLink.manageQuestion.multipleChoiceQuestion.server.MultipleChoiceQuestionServer;
+import com.ScoopLink.manageQuestion.papers.dto.Paper;
+import com.ScoopLink.manageQuestion.papers.server.PaperServer;
 import com.ScoopLink.manageQuestion.question.dto.QuestionRequest;
 import com.ScoopLink.manageQuestion.question.dto.QuestionResponse;
 import com.ScoopLink.manageQuestion.question.dto.QuestionType;
@@ -35,6 +37,9 @@ public class QuestionServerImpl implements QuestionServer {
 
     @Resource
     private QuestionTypeServer questionTypeServer;
+
+    @Resource
+    private PaperServer paperServer;
 
     @Override
     @Transactional
@@ -204,26 +209,56 @@ public class QuestionServerImpl implements QuestionServer {
             }
 
             boolean success = false;
+
+            // 获取题目信息以获取paperId和score，用于后续更新试卷统计
+            Object questionObj = null;
+            Integer score = 0;
+            Long paperId = null;
+
             switch (questionType.getTypeCode()) {
                 case "MULTIPLE_CHOICE":
+                    MultipleChoiceQuestion mcq = multipleChoiceQuestionServer.GetMultipleChoiceQuestion(id);
+                    if (mcq != null) {
+                        score = mcq.getScore() != null ? mcq.getScore() : 0;
+                        paperId = mcq.getPaperId();
+                    }
                     success = multipleChoiceQuestionServer.DeleteMultipleChoiceQuestion(id);
                     break;
                 case "ANALYSIS":
+                    AnalysisQuestion aq = analysisQuestionServer.GetAnalysisQuestion(id);
+                    if (aq != null) {
+                        score = aq.getScore() != null ? aq.getScore() : 0;
+                        paperId = aq.getPaperId();
+                    }
                     success = analysisQuestionServer.DeleteAnalysisQuestion(id);
                     break;
                 case "ESSAY":
+                    EssayQuestion eq = essayQuestionServer.GetEssayQuestion(id);
+                    if (eq != null) {
+                        score = eq.getScore() != null ? eq.getScore() : 0;
+                        paperId = eq.getPaperId();
+                    }
                     success = essayQuestionServer.DeleteEssayQuestion(id);
                     break;
                 default:
                     return createErrorResponse("不支持的题目类型: " + questionType.getTypeCode());
             }
 
+            // 更新对应试卷的题目数量和总分数
+            boolean updateSuccess = true;
+            if (paperId != null) {
+                updateSuccess = updatePaperQuestionCountAndScore(paperId, -1, -score);
+            }
+
             QuestionResponse response = new QuestionResponse();
-            response.setSuccess(success);
+            response.setSuccess(success && updateSuccess);
             response.setId(id);
             response.setQuestionTypeId(questionTypeId);
             response.setQuestionTypeCode(questionType.getTypeCode());
             response.setQuestionTypeName(questionType.getTypeName());
+            if (paperId != null) {
+                response.setPaperId(paperId);
+            }
             return response;
         } catch (Exception e) {
             return createErrorResponse("删除题目失败: " + e.getMessage());
@@ -269,8 +304,13 @@ public class QuestionServerImpl implements QuestionServer {
             mcq.setCorrectAnswer((String) extra.get("correctAnswer"));
             mcq.setExplanation((String) extra.get("explanation"));
         }
+        //更新对应paper的题目数量和总分数
+        boolean success = updatePaperQuestionCountAndScore(request.getPaperId(), 1, request.getScore());
+        if (!success) {
+            return createErrorResponse("更新试卷题目数量和总分数失败");
+        }
 
-        boolean success = multipleChoiceQuestionServer.CreateMultipleChoiceQuestion(mcq);
+        success = multipleChoiceQuestionServer.CreateMultipleChoiceQuestion(mcq);
         return convertToResponse(mcq, questionType, success);
     }
 
@@ -286,8 +326,13 @@ public class QuestionServerImpl implements QuestionServer {
             aq.setCorrectAnswer((String) extra.get("correctAnswer"));
             aq.setExplanation((String) extra.get("explanation"));
         }
+        //更新对应paper的题目数量和总分数
+        boolean success = updatePaperQuestionCountAndScore(request.getPaperId(), 1, request.getScore());
+        if (!success) {
+            return createErrorResponse("更新试卷题目数量和总分数失败");
+        }
 
-        boolean success = analysisQuestionServer.CreateAnalysisQuestion(aq);
+        success = analysisQuestionServer.CreateAnalysisQuestion(aq);
         return convertToResponse(aq, questionType, success);
     }
 
@@ -303,9 +348,28 @@ public class QuestionServerImpl implements QuestionServer {
             eq.setReferenceAnswer((String) extra.get("referenceAnswer"));
             eq.setExplanation((String) extra.get("explanation"));
         }
+        //更新对应paper的题目数量和总分数
+        boolean success = updatePaperQuestionCountAndScore(request.getPaperId(), 1, request.getScore());
+        if (!success) {
+            return createErrorResponse("更新试卷题目数量和总分数失败");
+        }
 
-        boolean success = essayQuestionServer.CreateEssayQuestion(eq);
+        success = essayQuestionServer.CreateEssayQuestion(eq);
         return convertToResponse(eq, questionType, success);
+    }
+
+
+    private boolean updatePaperQuestionCountAndScore(Long paperId, int questionCount, int score) {
+        //更新对应paper的题目数量和总分数
+        Paper paper = paperServer.GetPaper(paperId);
+        if (paper == null) {
+            return false;
+        }
+        paper.setQuestionCount(Math.max(0, paper.getQuestionCount()) + questionCount);
+        paper.setTotalScore(Math.max(0, paper.getTotalScore()) + score);
+        // 更新试卷
+        paperServer.UpdatePaper(paper);
+        return true;
     }
 
     private QuestionResponse updateMultipleChoiceQuestion(QuestionRequest request, QuestionType questionType) {

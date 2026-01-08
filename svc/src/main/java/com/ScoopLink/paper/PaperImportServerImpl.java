@@ -38,10 +38,9 @@ public class PaperImportServerImpl implements PaperImportServer {
         try {
             // 1. 创建试卷
             Paper paper = importTemplate.getPaperInfo();
-            Paper createdPaper = paperServer.CreatePaper(paper);
-            if (createdPaper == null) {
-                return false;
-            }
+            Integer totalScore = 0;
+            Integer questionCount = 0;
+
 
             // 2. 批量创建选择题
             List<MultipleChoiceQuestion> mcqList = importTemplate.getMultipleChoiceQuestions();
@@ -49,6 +48,9 @@ public class PaperImportServerImpl implements PaperImportServer {
                 for (MultipleChoiceQuestion mcq : mcqList) {
                     // 设置试卷ID
                     mcq.setPaperId(paper.getId());
+                    // 累加总分数
+                    totalScore += mcq.getScore();
+                    questionCount++;
                 }
                 multipleChoiceQuestionServer.CreateMultipleChoiceQuestions(mcqList);
             }
@@ -59,6 +61,9 @@ public class PaperImportServerImpl implements PaperImportServer {
                 for (EssayQuestion eq : eqList) {
                     // 设置试卷ID
                     eq.setPaperId(paper.getId());
+                    // 累加总分数
+                    totalScore += eq.getScore();
+                    questionCount++;
                 }
                 essayQuestionServer.CreateEssayQuestions(eqList);
             }
@@ -69,9 +74,18 @@ public class PaperImportServerImpl implements PaperImportServer {
                 for (AnalysisQuestion aq : aqList) {
                     // 设置试卷ID
                     aq.setPaperId(paper.getId());
+                    // 累加总分数
+                    totalScore += aq.getScore();
+                    questionCount++;
                 }
                 analysisQuestionServer.CreateAnalysisQuestions(aqList);
             }
+
+
+            // 设置试卷的总分数和题目数量
+            paper.setTotalScore(totalScore);
+            paper.setQuestionCount(questionCount);
+            Paper createdPaper = paperServer.CreatePaper(paper);
 
             return true;
         } catch (Exception e) {
