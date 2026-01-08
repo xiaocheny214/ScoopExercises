@@ -28,6 +28,9 @@ public class ScoopExercisesApplication {
             out.println("│ ScoopExercises │");
             out.println("────────────────");
         });
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("应用正在关闭...");
+        }));
         app.run(args);
     }
 }
