@@ -37,4 +37,8 @@ public interface PaperMapper {
      * 批量删除试卷
      */
     int deleteByIds(@Param("ids") List<Long> ids);
+    /**
+     * 根据题库ID查询试卷数量
+     */
+    int selectCountByQuestionBankId(Long id);
 }

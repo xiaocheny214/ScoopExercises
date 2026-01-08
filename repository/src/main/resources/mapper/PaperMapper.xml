@@ -34,6 +34,11 @@
         ORDER BY create_time DESC
     </select>
 
+    <!-- 根据题库ID查询试卷数量 -->
+    <select id="selectCountByQuestionBankId" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM papers WHERE bank_id = #{id}
+    </select>
+
     <!-- 更新试卷 -->
     <update id="updatePaper" parameterType="com.ScoopLink.manageQuestion.papers.dto.Paper">
         UPDATE papers

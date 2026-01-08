@@ -2,6 +2,7 @@ package com.ScoopLink.questionBank;
 
 import com.ScoopLink.manageQuestion.questionBank.dto.QuestionBank;
 import com.ScoopLink.manageQuestion.questionBank.server.QuestionBankServer;
+import com.ScoopLink.paper.PaperMapper;
 import com.ScoopLink.questionBankMapper.QuestionBankMapper;
 import com.ScoopLink.dto.PageRequest;
 import com.ScoopLink.dto.PageResponse;
@@ -18,6 +19,8 @@ public class QuestionBankServerImpl implements QuestionBankServer {
 
     @Resource
     private QuestionBankMapper questionBankMapper;
+    @Resource
+    private PaperMapper paperMapper;
     
     @Override
     public QuestionBank GetQuestionBank(Long id) {
@@ -84,6 +87,12 @@ public class QuestionBankServerImpl implements QuestionBankServer {
         if (bank == null) {
             return false;
         }
+        // 检查是否有试卷引用该题库
+        int paperCount = paperMapper.selectCountByQuestionBankId(id);
+        if (paperCount > 0) {
+            return false;
+        }
+
         int result = questionBankMapper.deleteById(id);
         return result > 0;
     }

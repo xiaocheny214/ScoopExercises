@@ -16,20 +16,20 @@
 
     <!-- 插入分数记录 -->
     <insert id="insertScore" parameterType="com.ScoopLink.scoreCalculation.dto.Score" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO scores (user_id, paper_id, total_score_obtained, max_score, completion_time)
-        VALUES (#{userId}, #{paperId}, #{totalScore}, #{maxScore}, #{createTime})
+        INSERT INTO scores (user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count)
+        VALUES (#{userId}, #{paperId}, #{totalScore}, #{maxScore}, #{createTime}, #{status}, #{answeredCount}, #{totalCount})
     </insert>
 
     <!-- 根据ID查询分数记录 -->
     <select id="selectById" parameterType="java.lang.Long" resultMap="ScoreMap">
-        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time
+        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count
         FROM scores
         WHERE id = #{id}
     </select>
 
     <!-- 查询所有分数记录 -->
     <select id="selectAll" resultMap="ScoreMap">
-        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time
+        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count
         FROM scores
         ORDER BY completion_time DESC
     </select>

@@ -356,12 +356,22 @@ public class ScoreCalculationService implements SubmitAnswer {
 
             scoreServer.CreateScore(score);
         } else {
-            // 更新现有的分数记录
+            // 更新现有的分数记录 - 添加空值安全检查
             score = existingScores.get(0);
             score.setTotalScore(score.getTotalScore() + currentScore); // 累加分数
             score.setCreateTime(LocalDateTime.now());
-            score.setAnsweredCount(score.getAnsweredCount() + 1);
-            score.setStatus(score.getAnsweredCount() >= score.getTotalCount() ? 1 : 0);
+
+            // 安全处理answeredCount字段，避免空指针异常
+            Integer currentAnsweredCount = score.getAnsweredCount();
+            int newAnsweredCount = (currentAnsweredCount != null ? currentAnsweredCount : 0) + 1;
+            score.setAnsweredCount(newAnsweredCount);
+
+            // 安全处理totalCount字段
+            Integer currentTotalCount = score.getTotalCount();
+            int safeTotalCount = currentTotalCount != null ? currentTotalCount : questionCount;
+            score.setTotalCount(safeTotalCount);
+
+            score.setStatus(newAnsweredCount >= safeTotalCount ? 1 : 0);
 
             scoreServer.UpdateScore(score);
         }
