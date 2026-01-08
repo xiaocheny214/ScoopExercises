@@ -324,7 +324,15 @@ public class ScoreCalculationService implements SubmitAnswer {
      * 更新用户答题记录
      */
     private void updateUserAnswer(UserAnswer userAnswer) {
-        userAnswersServer.UpdateUserAnswer(userAnswer);
+        //先判断是否存在该记录
+        UserAnswer existingAnswer = userAnswersServer.GetUserAnswer(userAnswer.getId());
+        if (existingAnswer == null) {
+            // 如果不存在，创建新记录
+            userAnswersServer.CreateUserAnswers(userAnswer);
+        } else {
+            // 如果存在，更新记录
+            userAnswersServer.UpdateUserAnswer(userAnswer);
+        }
     }
     
     /**
