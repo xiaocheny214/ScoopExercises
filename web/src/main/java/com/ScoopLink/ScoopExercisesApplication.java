@@ -28,8 +28,14 @@ public class ScoopExercisesApplication {
             out.println("│ ScoopExercises │");
             out.println("────────────────");
         });
+        // 添加关闭钩子
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("应用正在关闭...");
+            System.out.println("应用正在关闭，请等待数据库连接释放...");
+            try {
+                Thread.sleep(1000); // 等待1秒确保资源释放
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }));
         app.run(args);
     }

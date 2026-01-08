@@ -35,7 +35,7 @@ spring:
         compress: true
   sql:
     init:
-      mode: embedded  # 关键修改：改为embedded模式
+      mode: never  # 禁用自动初始化，避免数据被覆盖
       schema-locations: classpath:scoop_exercises.sql
 
 # MyBatis配置
