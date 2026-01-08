@@ -30,7 +30,8 @@ public class DatabaseInitializer implements CommandLineRunner {
     // 需要检查的关键表
     private static final String[] REQUIRED_TABLES = {
             "users", "question_banks", "papers", "question_types",
-            "multiple_choice_questions", "analysis_questions", "essay_questions"
+            "multiple_choice_questions", "analysis_questions", "essay_questions",
+            "user_answers","scores"
     };
 
     @Override
