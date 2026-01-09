@@ -33,6 +33,11 @@
         FROM scores
         ORDER BY completion_time DESC
     </select>
+    <select id="selectByPaperId" resultType="com.ScoopLink.scoreCalculation.dto.Score">
+        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count
+        FROM scores
+        WHERE paper_id = #{paperId}
+    </select>
 
     <!-- 更新分数记录 -->
     <update id="updateScore" parameterType="com.ScoopLink.scoreCalculation.dto.Score">

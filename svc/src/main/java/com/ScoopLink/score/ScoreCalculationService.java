@@ -1,5 +1,6 @@
 package com.ScoopLink.score;
 
+import com.ScoopLink.exception.BusinessException;
 import com.ScoopLink.manageQuestion.analysisQuestion.dto.AnalysisQuestion;
 import com.ScoopLink.manageQuestion.analysisQuestion.server.AnalysisQuestionServer;
 import com.ScoopLink.manageQuestion.essayQuestions.dto.EssayQuestion;
@@ -11,12 +12,14 @@ import com.ScoopLink.manageQuestion.papers.server.PaperServer;
 import com.ScoopLink.scoreCalculation.dto.Score;
 import com.ScoopLink.scoreCalculation.server.ScoreServer;
 import com.ScoopLink.userAnswers.dto.UserAnswer;
+import com.ScoopLink.userAnswers.dto.submitPaper;
 import com.ScoopLink.userAnswers.server.SubmitAnswer;
 import com.ScoopLink.userAnswers.server.UserAnswersServer;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.channels.FileLockInterruptionException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -106,9 +109,24 @@ public class ScoreCalculationService implements SubmitAnswer {
         return userAnswer;
     }
 
+    @Override
+    public Score SubmitPaper(submitPaper submitPaper) {
+        //校验用户是否提交了所有题目
+        try {
+            List<Long>answerIds = submitPaper.getAnswerIds();
+            boolean allAnswered = answerIds.stream().allMatch(answerId -> userAnswersServer.GetUserAnswer(answerId) != null);
+            if(!allAnswered) {
+               throw new IllegalAccessException("用户未回答所有题目");
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
 
+        //通过试卷id来查询分数
+        Score score = scoreServer.GetScoreByPaperId(submitPaper.getPaperId());
+        return score != null ? score : new Score();
+    }
 
-    
     /**
      * 根据问题ID和问题类型获取正确答案
      */

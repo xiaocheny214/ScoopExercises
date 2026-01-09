@@ -2,7 +2,9 @@ package com.ScoopLink.controller;
 
 
 import com.ScoopLink.response.CommonResponse;
+import com.ScoopLink.scoreCalculation.dto.Score;
 import com.ScoopLink.userAnswers.dto.UserAnswer;
+import com.ScoopLink.userAnswers.dto.submitPaper;
 import com.ScoopLink.userAnswers.server.SubmitAnswer;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,5 +29,17 @@ public class submitAnswerController {
             return CommonResponse.error("提交失败");
         }
         return CommonResponse.success("提交成功", success);
+    }
+
+    /**
+     * 提交试卷
+     */
+    @PostMapping("/paper")
+    public CommonResponse<Score> submitPaper(@RequestBody submitPaper submitPaper) {
+        Score score = submitAnswer.SubmitPaper(submitPaper);
+        if (score == null) {
+            return CommonResponse.error("提交失败");
+        }
+        return CommonResponse.success("提交成功", score);
     }
 }

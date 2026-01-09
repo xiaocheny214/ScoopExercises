@@ -17,6 +17,10 @@ public interface ScoreMapper {
      * 根据ID获取分数记录
      */
     Score selectById(@Param("id") Long id);
+    /**
+     * 根据试卷ID获取分数记录
+     */
+    Score selectByPaperId(@Param("paperId") Long paperId);
 
     /**
      * 获取所有分数记录列表

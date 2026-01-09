@@ -23,4 +23,11 @@ public interface ScoreServer {
 
 
     public boolean DeleteScoreList(List<Long> ids);
+
+    /**
+     * 根据试卷ID获取分数
+     * @param paperId 试卷ID
+     * @return 分数
+     */
+    Score GetScoreByPaperId(Long paperId);
 }

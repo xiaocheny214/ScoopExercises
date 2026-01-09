@@ -51,4 +51,9 @@ public class ScoreServerImpl implements ScoreServer {
         int result = scoreMapper.deleteByIds(ids);
         return result > 0;
     }
+
+    @Override
+    public Score GetScoreByPaperId(Long paperId) {
+        return scoreMapper.selectByPaperId(paperId);
+    }
 }

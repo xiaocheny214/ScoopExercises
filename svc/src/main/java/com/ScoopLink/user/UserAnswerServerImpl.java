@@ -20,6 +20,11 @@ public class UserAnswerServerImpl implements UserAnswersServer {
     }
 
     @Override
+    public UserAnswer GetUserAnswerByQuestionId(Integer questionId) {
+        return userAnswerMapper.selectByQuestionId(questionId);
+    }
+
+    @Override
     public List<UserAnswer> GetUserAnswerList() {
         return userAnswerMapper.selectAll();
     }

@@ -41,4 +41,8 @@ public interface UserAnswerMapper {
      * 批量创建用户答题记录
      */
     int insertUserAnswers(List<UserAnswer> userAnswerList);
+    /**
+     * 根据问题ID获取用户答题记录
+     */
+    UserAnswer selectByQuestionId(Integer questionId);
 }

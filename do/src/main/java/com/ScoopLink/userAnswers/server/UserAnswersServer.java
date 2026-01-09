@@ -32,6 +32,13 @@ public interface UserAnswersServer {
 
      /**
       * 获取用户答案列表
+      * @param questionId 问题ID
+      * @return 用户答案列表
+      */
+     public UserAnswer GetUserAnswerByQuestionId(Integer questionId );
+
+     /**
+      * 获取用户答案列表
       * @return 用户答案列表
       */
       public List<UserAnswer> GetUserAnswerList();

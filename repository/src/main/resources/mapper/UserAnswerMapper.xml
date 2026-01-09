@@ -39,6 +39,11 @@
         FROM user_answers
         ORDER BY answer_time DESC
     </select>
+    <select id="selectByQuestionId" resultType="com.ScoopLink.userAnswers.dto.UserAnswer">
+        SELECT id, user_id, paper_id, question_type, question_id, user_answer, is_correct, score_obtained, answer_time
+        FROM user_answers
+        WHERE question_id = #{questionId}
+    </select>
 
     <!-- 更新用户答题记录 -->
     <update id="updateUserAnswer" parameterType="com.ScoopLink.userAnswers.dto.UserAnswer">
