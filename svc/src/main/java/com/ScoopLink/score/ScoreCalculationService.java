@@ -1,6 +1,5 @@
 package com.ScoopLink.score;
 
-import com.ScoopLink.exception.BusinessException;
 import com.ScoopLink.manageQuestion.analysisQuestion.dto.AnalysisQuestion;
 import com.ScoopLink.manageQuestion.analysisQuestion.server.AnalysisQuestionServer;
 import com.ScoopLink.manageQuestion.essayQuestions.dto.EssayQuestion;
@@ -9,6 +8,8 @@ import com.ScoopLink.manageQuestion.multipleChoiceQuestion.dto.MultipleChoiceQue
 import com.ScoopLink.manageQuestion.multipleChoiceQuestion.server.MultipleChoiceQuestionServer;
 import com.ScoopLink.manageQuestion.papers.dto.Paper;
 import com.ScoopLink.manageQuestion.papers.server.PaperServer;
+import com.ScoopLink.manageQuestion.question.dto.QuestionType;
+import com.ScoopLink.manageQuestion.question.server.QuestionTypeServer;
 import com.ScoopLink.scoreCalculation.dto.Score;
 import com.ScoopLink.scoreCalculation.server.ScoreServer;
 import com.ScoopLink.userAnswers.dto.UserAnswer;
@@ -19,7 +20,6 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.channels.FileLockInterruptionException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -47,7 +47,8 @@ public class ScoreCalculationService implements SubmitAnswer {
     @Resource
     private PaperServer paperServer;
 
-
+    @Resource
+    private QuestionTypeServer questionTypeServer;
 
 
     @Override
@@ -406,7 +407,12 @@ public class ScoreCalculationService implements SubmitAnswer {
 
 
     private boolean isValidQuestionType(String questionType) {
-        return questionType.equals("MULTIPLE_CHOICE") || questionType.equals("ESSAY") || questionType.equals("ANALYSIS");
+        //从数据库中拿到所有题目类型来比较
+        Set<String> collect = questionTypeServer.GetAllQuestionTypes().stream()
+                .map(QuestionType::getTypeCode)
+                .collect(Collectors.toSet());
+
+        return questionType != null && collect.contains(questionType);
     }
 
 
