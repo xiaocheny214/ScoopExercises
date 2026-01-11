@@ -66,4 +66,57 @@
         </foreach>
     </delete>
 
+    <!-- 分页查询分数记录 -->
+    <select id="selectWithPaging" resultMap="ScoreMap">
+        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count
+        FROM scores
+        <where>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="paperId != null">
+                AND paper_id = #{paperId}
+            </if>
+            <if test="bankId != null">
+                AND EXISTS (
+                    SELECT 1 FROM papers p 
+                    WHERE p.id = paper_id AND p.bank_id = #{bankId}
+                )
+            </if>
+            <if test="startDate != null">
+                AND completion_time >= #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND completion_time &lt;= #{endDate}
+            </if>
+        </where>
+        ORDER BY completion_time DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <!-- 查询分数记录总数 -->
+    <select id="selectCount" resultType="long">
+        SELECT COUNT(1)
+        FROM scores
+        <where>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="paperId != null">
+                AND paper_id = #{paperId}
+            </if>
+            <if test="bankId != null">
+                AND EXISTS (
+                    SELECT 1 FROM papers p 
+                    WHERE p.id = paper_id AND p.bank_id = #{bankId}
+                )
+            </if>
+            <if test="startDate != null">
+                AND completion_time >= #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND completion_time &lt;= #{endDate}
+            </if>
+        </where>
+    </select>
 </mapper>

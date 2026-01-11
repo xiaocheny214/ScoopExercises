@@ -45,4 +45,9 @@ public interface UserAnswerMapper {
      * 根据问题ID获取用户答题记录
      */
     UserAnswer selectByQuestionId(Integer questionId);
+
+    /**
+     * 根据用户ID和试卷ID获取用户答题记录列表
+     */
+    List<UserAnswer> selectByUserIdAndPaperId(@Param("userId") Long userId, @Param("paperId") Long paperId);
 }

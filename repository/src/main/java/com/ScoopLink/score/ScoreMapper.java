@@ -4,6 +4,7 @@ import com.ScoopLink.scoreCalculation.dto.Score;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
@@ -41,4 +42,14 @@ public interface ScoreMapper {
      * 批量删除分数记录
      */
     int deleteByIds(@Param("ids") List<Long> ids);
+
+    /**
+     * 分页查询分数记录
+     */
+    List<Score> selectWithPaging(@Param("offset") int offset, @Param("size") int size, @Param("userId") Long userId, @Param("paperId") Long paperId, @Param("bankId") Long bankId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+    /**
+     * 查询分数记录总数
+     */
+    long selectCount(@Param("userId") Long userId, @Param("paperId") Long paperId, @Param("bankId") Long bankId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }

@@ -63,4 +63,12 @@ public interface UserAnswersServer {
        * @return 是否删除成功
        */
       public boolean DeleteUserAnswerList(List<Long> ids);
+
+      /**
+       * 根据用户ID和试卷ID获取用户答案列表
+       * @param userId 用户ID
+       * @param paperId 试卷ID
+       * @return 用户答案列表
+       */
+      public List<UserAnswer> GetUserAnswerByUserIdAndPaperId(Long userId, Long paperId);
 }

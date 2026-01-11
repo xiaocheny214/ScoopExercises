@@ -1,6 +1,9 @@
 package com.ScoopLink.scoreCalculation.server;
 
+import com.ScoopLink.dto.PageResponse;
 import com.ScoopLink.scoreCalculation.dto.Score;
+import com.ScoopLink.scoreCalculation.dto.ScoreInfo;
+import com.ScoopLink.scoreCalculation.dto.ScoreRequest;
 
 import java.util.List;
 

@@ -65,4 +65,9 @@ public class UserAnswerServerImpl implements UserAnswersServer {
         int result = userAnswerMapper.insertUserAnswers(userAnswerList);
         return result > 0;
     }
+
+    @Override
+    public List<UserAnswer> GetUserAnswerByUserIdAndPaperId(Long userId, Long paperId) {
+        return userAnswerMapper.selectByUserIdAndPaperId(userId, paperId);
+    }
 }

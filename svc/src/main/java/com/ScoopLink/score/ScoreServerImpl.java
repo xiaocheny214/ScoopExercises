@@ -1,5 +1,6 @@
 package com.ScoopLink.score;
 
+
 import com.ScoopLink.scoreCalculation.dto.Score;
 import com.ScoopLink.scoreCalculation.server.ScoreServer;
 import jakarta.annotation.Resource;
