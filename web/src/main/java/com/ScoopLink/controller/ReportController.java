@@ -6,6 +6,7 @@ import com.ScoopLink.response.CommonResponse;
 import com.ScoopLink.scoreCalculation.dto.Score;
 import com.ScoopLink.scoreCalculation.dto.ScoreInfo;
 import com.ScoopLink.scoreCalculation.dto.ScoreRequest;
+import com.ScoopLink.scoreCalculation.dto.UserScore;
 import com.ScoopLink.scoreCalculation.server.StatisticsScore;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +25,8 @@ public class ReportController {
      * @return 分页结果
      */
     @PostMapping("/scores")
-    public CommonResponse<PageResponse<Score>>report(@RequestBody ScoreRequest request){
-        PageResponse<Score> pageResponse = statisticsScoreServer.getScores(request);
+    public CommonResponse<PageResponse<UserScore>>report(@RequestBody ScoreRequest request){
+        PageResponse<UserScore> pageResponse = statisticsScoreServer.getScores(request);
 
         if (pageResponse != null) {
             return CommonResponse.success(pageResponse);

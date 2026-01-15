@@ -10,10 +10,15 @@ import com.ScoopLink.manageQuestion.essayQuestions.server.EssayQuestionServer;
 import com.ScoopLink.manageQuestion.multipleChoiceQuestion.dto.AnswerChoice;
 import com.ScoopLink.manageQuestion.multipleChoiceQuestion.dto.MultipleChoiceQuestion;
 import com.ScoopLink.manageQuestion.multipleChoiceQuestion.server.MultipleChoiceQuestionServer;
+import com.ScoopLink.manageQuestion.papers.dto.Paper;
+import com.ScoopLink.manageQuestion.papers.server.PaperServer;
 import com.ScoopLink.manageQuestion.question.dto.Question;
+import com.ScoopLink.manageQuestion.questionBank.dto.QuestionBank;
+import com.ScoopLink.manageQuestion.questionBank.server.QuestionBankServer;
 import com.ScoopLink.scoreCalculation.dto.Score;
 import com.ScoopLink.scoreCalculation.dto.ScoreInfo;
 import com.ScoopLink.scoreCalculation.dto.ScoreRequest;
+import com.ScoopLink.scoreCalculation.dto.UserScore;
 import com.ScoopLink.scoreCalculation.server.ScoreServer;
 import com.ScoopLink.scoreCalculation.server.StatisticsScore;
 import com.ScoopLink.userAnswers.dto.UserAnswer;
@@ -25,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ScoreHistoryService implements StatisticsScore {
@@ -41,9 +48,13 @@ public class ScoreHistoryService implements StatisticsScore {
     private ScoreMapper scoreMapper;
     @Resource
     private UserAnswersServer userAnswersServer;
+    @Resource
+    private QuestionBankServer questionBankServer;
+    @Resource
+    private PaperServer paperServer;
 
     @Override
-    public PageResponse<Score> getScores(ScoreRequest request) {
+    public PageResponse<UserScore> getScores(ScoreRequest request) {
         // 设置默认值
         int page = request.getPage() == null || request.getPage() < 0 ? 0 : request.getPage();
         int size = request.getSize() == null || request.getSize() <= 0 ? 10 : request.getSize();
@@ -61,7 +72,6 @@ public class ScoreHistoryService implements StatisticsScore {
                 request.getStartDate(),
                 request.getEndDate()
         );
-
         // 查询总数
         long total = scoreMapper.selectCount(
                 request.getUserId(),
@@ -71,8 +81,21 @@ public class ScoreHistoryService implements StatisticsScore {
                 request.getEndDate()
         );
 
+        //封装数据
+        List<UserScore> userScoreStream = scores.stream().map(score -> {
+            Paper paper = paperServer.GetPaper(score.getPaperId());
+            QuestionBank bank = questionBankServer.GetQuestionBank(paper.getBankId());
+
+            // 封装数据
+            UserScore userScore = new UserScore();
+            userScore.setScore(score);
+            userScore.setBankName(bank.getName());
+            userScore.setPaperName(paper.getTitle());
+            return userScore;
+        }).collect(Collectors.toList());
+
         // 返回分页结果
-        return PageResponse.of(page, size, total, scores);
+        return PageResponse.of(page, size, total, userScoreStream);
     }
 
 

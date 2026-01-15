@@ -5,6 +5,7 @@ import com.ScoopLink.dto.PageResponse;
 import com.ScoopLink.scoreCalculation.dto.Score;
 import com.ScoopLink.scoreCalculation.dto.ScoreInfo;
 import com.ScoopLink.scoreCalculation.dto.ScoreRequest;
+import com.ScoopLink.scoreCalculation.dto.UserScore;
 
 public interface StatisticsScore {
 
@@ -13,7 +14,7 @@ public interface StatisticsScore {
      * @param request 分页请求
      * @return 分页结果
      */
-    PageResponse<Score> getScores(ScoreRequest request);
+    PageResponse<UserScore> getScores(ScoreRequest request);
 
     ScoreInfo GetScoreInfo(Long scoreId);
 
