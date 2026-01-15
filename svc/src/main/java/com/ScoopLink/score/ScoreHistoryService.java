@@ -20,6 +20,7 @@ import com.ScoopLink.userAnswers.dto.UserAnswer;
 import com.ScoopLink.userAnswers.server.UserAnswersServer;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -203,6 +204,7 @@ public class ScoreHistoryService implements StatisticsScore {
      * @return 删除结果
      */
     @Override
+    @Transactional
     public boolean deleteScore(Long scoreId) {
         //删除分数记录的同时删去用户的答题记录
         Score score = scoreMapper.selectById(scoreId);

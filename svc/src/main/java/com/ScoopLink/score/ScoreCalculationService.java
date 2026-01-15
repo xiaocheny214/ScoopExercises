@@ -360,7 +360,7 @@ public class ScoreCalculationService implements SubmitAnswer {
     private void createOrUpdateScoreRecord(Long userId, Long paperId, int currentScore, boolean isCorrect) {
         // 查找现有的分数记录
         List<Score> existingScores = scoreServer.GetScoreList().stream()
-                .filter(score -> score.getUserId().equals(userId) && score.getPaperId().equals(paperId))
+                .filter(score -> score.getUserId().equals(userId) && score.getPaperId().equals(paperId) && score.getStatus()==0)
                 .toList();
 
         //获取当前试卷的总分最大分数以及答题数量
@@ -398,7 +398,7 @@ public class ScoreCalculationService implements SubmitAnswer {
             int safeTotalCount = currentTotalCount != null ? currentTotalCount : questionCount;
             score.setTotalCount(safeTotalCount);
 
-            score.setStatus(newAnsweredCount >= safeTotalCount ? 1 : 0);
+            score.setStatus(newAnsweredCount == safeTotalCount ? 1 : 0);
 
             scoreServer.UpdateScore(score);
         }
