@@ -34,7 +34,7 @@
         ORDER BY completion_time DESC
     </select>
 <!--    按时间降序排列，取第一条分数记录，即为当前答题的分数记录-->
-    <select id="selectByPaperId" resultType="com.ScoopLink.scoreCalculation.dto.Score">
+    <select id="selectByPaperId" resultMap="ScoreMap">
         SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count
         FROM scores
         WHERE paper_id = #{paperId}
