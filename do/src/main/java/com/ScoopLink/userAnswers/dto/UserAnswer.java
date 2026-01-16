@@ -49,4 +49,9 @@ public class UserAnswer {
      * 回答时间
      */
     private LocalDateTime answerTime;
+
+    /**
+     * 尝试次数
+     */
+    private Long attemptNum;
 }

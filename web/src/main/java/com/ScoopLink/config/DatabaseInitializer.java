@@ -199,6 +199,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                 "user_answer TEXT," +
                 "is_correct BOOLEAN," +
                 "score_obtained DECIMAL(5,2)," +
+                "attempt_num BIGINT NOT NULL DEFAULT 1," +
                 "answer_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
                 "FOREIGN KEY (user_id) REFERENCES users(id)," +
                 "FOREIGN KEY (paper_id) REFERENCES papers(id)" +
@@ -215,6 +216,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                 "status INT DEFAULT 0," +
                 "answered_count INT DEFAULT 0," +
                 "total_count INT DEFAULT 0," +
+                "attempt_num BIGINT NOT NULL DEFAULT 1," +
                 "FOREIGN KEY (user_id) REFERENCES users(id)," +
                 "FOREIGN KEY (paper_id) REFERENCES papers(id)" +
             ")",

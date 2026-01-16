@@ -16,26 +16,26 @@
 
     <!-- 插入分数记录 -->
     <insert id="insertScore" parameterType="com.ScoopLink.scoreCalculation.dto.Score" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO scores (user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count)
-        VALUES (#{userId}, #{paperId}, #{totalScore}, #{maxScore}, #{createTime}, #{status}, #{answeredCount}, #{totalCount})
+        INSERT INTO scores (user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count, attempt_num)
+        VALUES (#{userId}, #{paperId}, #{totalScore}, #{maxScore}, #{createTime}, #{status}, #{answeredCount}, #{totalCount}, #{attemptNum})
     </insert>
 
     <!-- 根据ID查询分数记录 -->
     <select id="selectById" parameterType="java.lang.Long" resultMap="ScoreMap">
-        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count
+        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count, attempt_num
         FROM scores
         WHERE id = #{id}
     </select>
 
     <!-- 查询所有分数记录 -->
     <select id="selectAll" resultMap="ScoreMap">
-        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count
+        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count, attempt_num
         FROM scores
         ORDER BY completion_time DESC
     </select>
 <!--    按时间降序排列，取第一条分数记录，即为当前答题的分数记录-->
     <select id="selectByPaperId" resultMap="ScoreMap">
-        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count
+        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count, attempt_num
         FROM scores
         WHERE paper_id = #{paperId}
         ORDER BY completion_time DESC
@@ -52,7 +52,8 @@
             max_score = #{maxScore},
             status = #{status},
             answered_count = #{answeredCount},
-            total_count = #{totalCount}
+            total_count = #{totalCount},
+            attempt_num = #{attemptNum}
         WHERE id = #{id}
     </update>
 
@@ -71,7 +72,7 @@
 
     <!-- 分页查询分数记录 -->
     <select id="selectWithPaging" resultMap="ScoreMap">
-        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count
+        SELECT id, user_id, paper_id, total_score_obtained, max_score, completion_time, status, answered_count, total_count, attempt_num
         FROM scores
         <where>
             <if test="userId != null">

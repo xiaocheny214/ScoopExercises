@@ -3,7 +3,6 @@ package com.ScoopLink.controller;
 
 import com.ScoopLink.dto.PageResponse;
 import com.ScoopLink.response.CommonResponse;
-import com.ScoopLink.scoreCalculation.dto.Score;
 import com.ScoopLink.scoreCalculation.dto.ScoreInfo;
 import com.ScoopLink.scoreCalculation.dto.ScoreRequest;
 import com.ScoopLink.scoreCalculation.dto.UserScore;

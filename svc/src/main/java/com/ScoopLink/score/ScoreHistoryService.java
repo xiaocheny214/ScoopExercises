@@ -27,6 +27,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -111,16 +112,26 @@ public class ScoreHistoryService implements StatisticsScore {
         if (score == null) {
             return new ScoreInfo();
         }
+        //根据试卷ID获取试卷名称和题库名称
+        Long paperId = score.getPaperId();
+        Paper paper = paperServer.GetPaper(paperId);
+        String paperName = paper != null ? paper.getTitle() : "";
+        String bankName = questionBankServer.GetQuestionBank(paper.getBankId()) != null ? questionBankServer.GetQuestionBank(paper.getBankId()).getName() : "";
 
         //根据试卷ID获取该试卷下的所有题目
-        Long paperId = score.getPaperId();
         Long userId = score.getUserId();
         List<MultipleChoiceQuestion> mcqList = multipleChoiceQuestionServer.GetMultipleChoiceQuestionsByPaperId(paperId);
         List<AnalysisQuestion> aqList = analysisQuestionServer.GetAnalysisQuestionsByPaperId(paperId);
         List<EssayQuestion> eqList = essayQuestionServer.GetEssayQuestionsByPaperId(paperId);
         
-        //根据用户ID和试卷ID获取用户答案
-        List<UserAnswer> userAnswerList = userAnswersServer.GetUserAnswerByUserIdAndPaperId(userId, paperId);
+        // 根据分数记录获取作答次数，然后根据用户ID、试卷ID和作答次数获取用户答案
+        Long attemptNum = score.getAttemptNum();
+        List<UserAnswer> userAnswerList;
+        if (attemptNum != null) {
+            userAnswerList = userAnswersServer.GetUserAnswerByUserIdAndPaperIdAndAttemptNum(userId, paperId, attemptNum);
+        } else {
+            userAnswerList = userAnswersServer.GetUserAnswerByUserIdAndPaperId(userId, paperId);
+        }
         
         // 创建问题对象来存储用户答案详情
         Question question = new Question();
@@ -216,7 +227,11 @@ public class ScoreHistoryService implements StatisticsScore {
         
         //拼装分数详情
         ScoreInfo scoreInfo = new ScoreInfo();
-        scoreInfo.setScore(score);
+        UserScore userScore = new UserScore();
+        userScore.setScore(score);
+        userScore.setPaperName(paperName);
+        userScore.setBankName(bankName );
+        scoreInfo.setScoreInfo(userScore);
         scoreInfo.setUserAnswer(question);
         
         return scoreInfo;

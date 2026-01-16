@@ -71,4 +71,13 @@ public interface UserAnswersServer {
        * @return 用户答案列表
        */
       public List<UserAnswer> GetUserAnswerByUserIdAndPaperId(Long userId, Long paperId);
+
+      /**
+       * 根据用户ID、试卷ID和作答次数获取用户答案列表
+       * @param userId 用户ID
+       * @param paperId 试卷ID
+       * @param attemptNum 作答次数
+       * @return 用户答案列表
+       */
+      public List<UserAnswer> GetUserAnswerByUserIdAndPaperIdAndAttemptNum(Long userId, Long paperId, Long attemptNum);
 }

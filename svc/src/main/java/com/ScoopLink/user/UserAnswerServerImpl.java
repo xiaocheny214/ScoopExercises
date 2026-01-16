@@ -70,4 +70,9 @@ public class UserAnswerServerImpl implements UserAnswersServer {
     public List<UserAnswer> GetUserAnswerByUserIdAndPaperId(Long userId, Long paperId) {
         return userAnswerMapper.selectByUserIdAndPaperId(userId, paperId);
     }
+
+    @Override
+    public List<UserAnswer> GetUserAnswerByUserIdAndPaperIdAndAttemptNum(Long userId, Long paperId, Long attemptNum) {
+        return userAnswerMapper.selectByUserIdAndPaperIdAndAttemptNum(userId, paperId, attemptNum);
+    }
 }

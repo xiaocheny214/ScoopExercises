@@ -50,4 +50,9 @@ public class Score {
      * 总题数
      */
     private Integer totalCount;
+
+    /**
+     * 作答次数
+     */
+    private Long attemptNum;
 }

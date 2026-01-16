@@ -15,7 +15,7 @@ public class ScoreInfo implements Serializable {
     /**
      * 分数信息
      */
-    private Score score;
+    private UserScore scoreInfo;
 
     /**
      * 用户答案

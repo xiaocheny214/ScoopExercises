@@ -50,4 +50,9 @@ public interface UserAnswerMapper {
      * 根据用户ID和试卷ID获取用户答题记录列表
      */
     List<UserAnswer> selectByUserIdAndPaperId(@Param("userId") Long userId, @Param("paperId") Long paperId);
+
+    /**
+     * 根据用户ID、试卷ID和作答次数获取用户答题记录列表
+     */
+    List<UserAnswer> selectByUserIdAndPaperIdAndAttemptNum(@Param("userId") Long userId, @Param("paperId") Long paperId, @Param("attemptNum") Long attemptNum);
 }

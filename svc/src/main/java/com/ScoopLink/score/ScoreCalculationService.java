@@ -16,6 +16,7 @@ import com.ScoopLink.userAnswers.dto.UserAnswer;
 import com.ScoopLink.userAnswers.dto.submitPaper;
 import com.ScoopLink.userAnswers.server.SubmitAnswer;
 import com.ScoopLink.userAnswers.server.UserAnswersServer;
+import com.ScoopLink.util.SnowflakeIdGenerator;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,14 +73,16 @@ public class ScoreCalculationService implements SubmitAnswer {
         //计算用户分数
         int questionScore = getQuestionScore(userAnswer.getQuestionId(), userAnswer.getQuestionType());
         int scoreObtained = isCorrect ? questionScore : 0;
+        //创建或更新分数记录表
+        Long attemptNum = createOrUpdateScoreRecord(userAnswer.getUserId(), userAnswer.getPaperId(), scoreObtained, isCorrect);
         //更新用户答题记录中的得分和正确性状态
         userAnswer.setScoreObtained(scoreObtained);
         userAnswer.setCorrect(isCorrect);
         userAnswer.setAnswerTime(LocalDateTime.now());
+        userAnswer.setAttemptNum(attemptNum);
         //更新用户答题记录
         updateUserAnswer(userAnswer);
-        //创建或更新分数记录表
-        createOrUpdateScoreRecord(userAnswer.getUserId(), userAnswer.getPaperId(), scoreObtained, isCorrect);
+
         return userAnswer;
     }
 
@@ -343,25 +346,22 @@ public class ScoreCalculationService implements SubmitAnswer {
      * 更新用户答题记录
      */
     private void updateUserAnswer(UserAnswer userAnswer) {
-        //先判断是否存在该记录
-        UserAnswer existingAnswer = userAnswersServer.GetUserAnswer(userAnswer.getId());
-        if (existingAnswer == null) {
-            // 如果不存在，创建新记录
             userAnswersServer.CreateUserAnswers(userAnswer);
-        } else {
-            // 如果存在，更新记录
-            userAnswersServer.UpdateUserAnswer(userAnswer);
-        }
     }
     
     /**
      * 创建或更新分数记录
      */
-    private void createOrUpdateScoreRecord(Long userId, Long paperId, int currentScore, boolean isCorrect) {
+    private Long createOrUpdateScoreRecord(Long userId, Long paperId, int currentScore, boolean isCorrect) {
         // 查找现有的分数记录
         List<Score> existingScores = scoreServer.GetScoreList().stream()
                 .filter(score -> score.getUserId().equals(userId) && score.getPaperId().equals(paperId) && score.getStatus()==0)
                 .toList();
+
+        // 创建ID生成器实例
+        SnowflakeIdGenerator generator = new SnowflakeIdGenerator(1L, 1L);
+        // 生成数字型ID
+        long numericId = generator.nextId();
 
         //获取当前试卷的总分最大分数以及答题数量
         Paper paper = paperServer.GetPaper(paperId);
@@ -378,6 +378,7 @@ public class ScoreCalculationService implements SubmitAnswer {
             score.setCreateTime(LocalDateTime.now());
             score.setAnsweredCount(1);
             score.setStatus(0);
+            score.setAttemptNum(numericId);
             score.setTotalCount(questionCount);
             score.setMaxScore(totalScore);
 
@@ -402,6 +403,7 @@ public class ScoreCalculationService implements SubmitAnswer {
 
             scoreServer.UpdateScore(score);
         }
+        return numericId;
     }
 
 
