@@ -51,7 +51,7 @@ public class UserAnswer {
     private LocalDateTime answerTime;
 
     /**
-     * 尝试次数
+     * 作答标识
      */
     private Long attemptNum;
 }

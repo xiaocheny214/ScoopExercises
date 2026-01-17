@@ -403,7 +403,7 @@ public class ScoreCalculationService implements SubmitAnswer {
 
             scoreServer.UpdateScore(score);
         }
-        return numericId;
+        return score.getAttemptNum();
     }
 
 

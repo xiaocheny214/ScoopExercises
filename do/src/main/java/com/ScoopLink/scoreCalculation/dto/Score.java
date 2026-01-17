@@ -52,7 +52,7 @@ public class Score {
     private Integer totalCount;
 
     /**
-     * 作答次数
+     * 作答标识
      */
     private Long attemptNum;
 }

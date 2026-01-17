@@ -17,31 +17,31 @@
 
     <!-- 插入用户答题记录 -->
     <insert id="insertUserAnswer" parameterType="com.ScoopLink.userAnswers.dto.UserAnswer" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO user_answers (user_id, paper_id, question_type, question_id, user_answer, is_correct, score_obtained, answer_time)
-        VALUES (#{userId}, #{paperId}, #{questionType}, #{questionId}, #{userAnswer}, #{correct}, #{scoreObtained}, #{answerTime})
+        INSERT INTO user_answers (user_id, paper_id, question_type, question_id, user_answer, is_correct, score_obtained, answer_time, attempt_num)
+        VALUES (#{userId}, #{paperId}, #{questionType}, #{questionId}, #{userAnswer}, #{correct}, #{scoreObtained}, #{answerTime},#{attemptNum})
     </insert>
     <insert id="insertUserAnswers">
         <foreach item="item" collection="list">
-            INSERT INTO user_answers (user_id, paper_id, question_type, question_id, user_answer, is_correct, score_obtained, answer_time)
-            VALUES (#{item.userId}, #{item.paperId}, #{item.questionType}, #{item.questionId}, #{item.userAnswer}, #{item.correct}, #{item.scoreObtained}, #{item.answerTime})
+            INSERT INTO user_answers (user_id, paper_id, question_type, question_id, user_answer, is_correct, score_obtained, answer_time, attempt_num)
+            VALUES (#{item.userId}, #{item.paperId}, #{item.questionType}, #{item.questionId}, #{item.userAnswer}, #{item.correct}, #{item.scoreObtained}, #{item.answerTime},#{item.attemptNum})
         </foreach>
     </insert>
 
     <!-- 根据ID查询用户答题记录 -->
     <select id="selectById" parameterType="java.lang.Long" resultMap="UserAnswerMap">
-        SELECT id, user_id, paper_id, question_type, question_id, user_answer, is_correct, score_obtained, answer_time
+        SELECT id, user_id, paper_id, question_type, question_id, user_answer, is_correct, score_obtained, answer_time, attempt_num
         FROM user_answers
         WHERE id = #{id}
     </select>
 
     <!-- 查询所有用户答题记录 -->
     <select id="selectAll" resultMap="UserAnswerMap">
-        SELECT id, user_id, paper_id, question_type, question_id, user_answer, is_correct, score_obtained, answer_time
+        SELECT id, user_id, paper_id, question_type, question_id, user_answer, is_correct, score_obtained, answer_time, attempt_num
         FROM user_answers
         ORDER BY answer_time DESC
     </select>
     <select id="selectByQuestionId" resultType="com.ScoopLink.userAnswers.dto.UserAnswer">
-        SELECT id, user_id, paper_id, question_type, question_id, user_answer, is_correct, score_obtained, answer_time
+        SELECT id, user_id, paper_id, question_type, question_id, user_answer, is_correct, score_obtained, answer_time, attempt_num
         FROM user_answers
         WHERE question_id = #{questionId}
     </select>
@@ -59,7 +59,7 @@
         SELECT id, user_id, paper_id, question_type, question_id, user_answer, is_correct, score_obtained, answer_time, attempt_num
         FROM user_answers
         WHERE user_id = #{userId} AND paper_id = #{paperId} AND attempt_num = #{attemptNum}
-        ORDER BY question_type, question_id
+        ORDER BY question_type
     </select>
 
     <!-- 更新用户答题记录 -->
