@@ -40,5 +40,5 @@ public class EssayQuestion {
      /**
      * 题目类型ID
      */
-    private Integer questionTypeId;
+    private Long questionTypeId;
 }

@@ -70,5 +70,5 @@ public class MultipleChoiceQuestion {
      /**
      * 题目类型ID
      */
-    private Integer questionTypeId;
+    private Long questionTypeId;
 }

@@ -27,7 +27,7 @@
 
     <!-- 批量插入选择题 -->
     <insert id="insertMultipleChoiceQuestions">
-        INSERT INTO multiple_choice_questions (paper_id, question_text, option_a, option_b, option_c, option_d, option_e, option_f, correct_answer, explanation, score, sort_order)
+        INSERT INTO multiple_choice_questions (paper_id, question_text, option_a, option_b, option_c, option_d, option_e, option_f, correct_answer, explanation, score, sort_order, question_type_id)
         VALUES
         <foreach collection="multipleChoiceQuestions" item="question" separator=",">
             (#{question.paperId}, #{question.questionText}, #{question.optionA}, #{question.optionB}, #{question.optionC}, #{question.optionD}, #{question.optionE}, #{question.optionF}, #{question.correctAnswer}, #{question.explanation}, #{question.score}, #{question.sortOrder}, #{question.questionTypeId})

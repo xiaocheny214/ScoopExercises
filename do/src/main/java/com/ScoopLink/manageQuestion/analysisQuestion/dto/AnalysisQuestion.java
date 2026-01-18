@@ -38,5 +38,5 @@ public class AnalysisQuestion {
     private Integer sortOrder;
 
 
-    private Integer questionTypeId;
+    private Long questionTypeId;
 }

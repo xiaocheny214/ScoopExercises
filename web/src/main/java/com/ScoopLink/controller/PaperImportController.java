@@ -2,6 +2,7 @@ package com.ScoopLink.controller;
 
 import com.ScoopLink.manageQuestion.papers.dto.PaperImportTemplate;
 import com.ScoopLink.manageQuestion.papers.server.PaperImportServer;
+import com.ScoopLink.response.CommonResponse;
 import jakarta.annotation.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,16 +26,16 @@ public class PaperImportController {
      * 通过JSON模板导入试卷
      */
     @PostMapping("/json")
-    public ResponseEntity<Boolean> importPaperFromJson(@RequestBody PaperImportTemplate importTemplate) {
+    public CommonResponse<Boolean> importPaperFromJson(@RequestBody PaperImportTemplate importTemplate) {
         boolean success = paperImportServer.importPaper(importTemplate);
-        return ResponseEntity.ok(success);
+        return CommonResponse.success(success);
     }
     
     /**
      * 通过上传Excel文件导入试卷
      */
     @PostMapping("/excel")
-    public ResponseEntity<Boolean> importPaperFromExcel(@RequestParam("file") MultipartFile file) {
+    public CommonResponse<Boolean> importPaperFromExcel(@RequestParam("file") MultipartFile file) {
         try {
             // 保存上传的文件到临时位置，然后调用导入服务
             String tempFilePath = saveTempFile(file);
@@ -43,10 +44,10 @@ public class PaperImportController {
             // 删除临时文件
             deleteTempFile(tempFilePath);
             
-            return ResponseEntity.ok(success);
+            return CommonResponse.success(success);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(false);
+            return CommonResponse.error("导入失败");
         }
     }
     

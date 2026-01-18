@@ -12,6 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,17 +78,37 @@ public class PaperImportUtil {
         if (dataRow == null) return paper;
         
         // 根据列名找到对应的列索引
+        int idCol = getColumnIndex(headerRow, "id");
         int bankIdCol = getColumnIndex(headerRow, "bankId");
         int titleCol = getColumnIndex(headerRow, "title");
         int descriptionCol = getColumnIndex(headerRow, "description");
         int totalScoreCol = getColumnIndex(headerRow, "totalScore");
         int questionCountCol = getColumnIndex(headerRow, "questionCount");
+        int timeLimitCol = getColumnIndex(headerRow, "timeLimit");
+        int createTimeCol = getColumnIndex(headerRow, "createTime");
+        int updateTimeCol = getColumnIndex(headerRow, "updateTime");
         
+        if (idCol != -1) paper.setId(getLongCellValue(dataRow, idCol));
         if (bankIdCol != -1) paper.setBankId(getLongCellValue(dataRow, bankIdCol));
         if (titleCol != -1) paper.setTitle(getStringCellValue(dataRow, titleCol));
         if (descriptionCol != -1) paper.setDescription(getStringCellValue(dataRow, descriptionCol));
         if (totalScoreCol != -1) paper.setTotalScore(getIntCellValue(dataRow, totalScoreCol));
         if (questionCountCol != -1) paper.setQuestionCount(getIntCellValue(dataRow, questionCountCol));
+        if (timeLimitCol != -1) paper.setTimeLimit(getIntCellValue(dataRow, timeLimitCol));
+        if (createTimeCol != -1) {
+            String dateStr = getStringCellValue(dataRow, createTimeCol);
+            if (dateStr != null) {
+                // 可以根据需要解析日期字符串
+                // 这里简单地忽略，因为导入时会自动生成时间
+            }
+        }
+        if (updateTimeCol != -1) {
+            String dateStr = getStringCellValue(dataRow, updateTimeCol);
+            if (dateStr != null) {
+                // 可以根据需要解析日期字符串
+                // 这里简单地忽略，因为导入时会自动生成时间
+            }
+        }
         
         return paper;
     }
@@ -106,6 +127,7 @@ public class PaperImportUtil {
             MultipleChoiceQuestion question = new MultipleChoiceQuestion();
             
             // 根据列名找到对应的列索引
+            int idCol = getColumnIndex(headerRow, "id");
             int paperIdCol = getColumnIndex(headerRow, "paperId");
             int questionTextCol = getColumnIndex(headerRow, "questionText");
             int optionACol = getColumnIndex(headerRow, "optionA");
@@ -118,7 +140,9 @@ public class PaperImportUtil {
             int explanationCol = getColumnIndex(headerRow, "explanation");
             int scoreCol = getColumnIndex(headerRow, "score");
             int sortOrderCol = getColumnIndex(headerRow, "sortOrder");
+            int questionTypeIdCol = getColumnIndex(headerRow, "questionTypeId");
             
+            if (idCol != -1) question.setId(getLongCellValue(row, idCol));
             if (paperIdCol != -1) question.setPaperId(getLongCellValue(row, paperIdCol));
             if (questionTextCol != -1) question.setQuestionText(getStringCellValue(row, questionTextCol));
             if (optionACol != -1) question.setOptionA(getStringCellValue(row, optionACol));
@@ -131,6 +155,7 @@ public class PaperImportUtil {
             if (explanationCol != -1) question.setExplanation(getStringCellValue(row, explanationCol));
             if (scoreCol != -1) question.setScore(getIntCellValue(row, scoreCol));
             if (sortOrderCol != -1) question.setSortOrder(getIntCellValue(row, sortOrderCol));
+            if (questionTypeIdCol != -1) question.setQuestionTypeId(getLongCellValue(row, questionTypeIdCol));
             
             questions.add(question);
         }
@@ -152,19 +177,23 @@ public class PaperImportUtil {
             EssayQuestion question = new EssayQuestion();
             
             // 根据列名找到对应的列索引
+            int idCol = getColumnIndex(headerRow, "id");
             int paperIdCol = getColumnIndex(headerRow, "paperId");
             int questionTextCol = getColumnIndex(headerRow, "questionText");
             int referenceAnswerCol = getColumnIndex(headerRow, "referenceAnswer");
             int explanationCol = getColumnIndex(headerRow, "explanation");
             int scoreCol = getColumnIndex(headerRow, "score");
             int sortOrderCol = getColumnIndex(headerRow, "sortOrder");
+            int questionTypeIdCol = getColumnIndex(headerRow, "questionTypeId");
             
+            if (idCol != -1) question.setId(getLongCellValue(row, idCol));
             if (paperIdCol != -1) question.setPaperId(getLongCellValue(row, paperIdCol));
             if (questionTextCol != -1) question.setQuestionText(getStringCellValue(row, questionTextCol));
             if (referenceAnswerCol != -1) question.setReferenceAnswer(getStringCellValue(row, referenceAnswerCol));
             if (explanationCol != -1) question.setExplanation(getStringCellValue(row, explanationCol));
             if (scoreCol != -1) question.setScore(getIntCellValue(row, scoreCol));
             if (sortOrderCol != -1) question.setSortOrder(getIntCellValue(row, sortOrderCol));
+            if (questionTypeIdCol != -1) question.setQuestionTypeId(getLongCellValue(row, questionTypeIdCol));
             
             questions.add(question);
         }
@@ -186,19 +215,23 @@ public class PaperImportUtil {
             AnalysisQuestion question = new AnalysisQuestion();
             
             // 根据列名找到对应的列索引
+            int idCol = getColumnIndex(headerRow, "id");
             int paperIdCol = getColumnIndex(headerRow, "paperId");
             int questionTextCol = getColumnIndex(headerRow, "questionText");
             int correctAnswerCol = getColumnIndex(headerRow, "correctAnswer");
             int explanationCol = getColumnIndex(headerRow, "explanation");
             int scoreCol = getColumnIndex(headerRow, "score");
             int sortOrderCol = getColumnIndex(headerRow, "sortOrder");
+            int questionTypeIdCol = getColumnIndex(headerRow, "questionTypeId");
             
+            if (idCol != -1) question.setId(getLongCellValue(row, idCol));
             if (paperIdCol != -1) question.setPaperId(getLongCellValue(row, paperIdCol));
             if (questionTextCol != -1) question.setQuestionText(getStringCellValue(row, questionTextCol));
             if (correctAnswerCol != -1) question.setCorrectAnswer(getStringCellValue(row, correctAnswerCol));
             if (explanationCol != -1) question.setExplanation(getStringCellValue(row, explanationCol));
             if (scoreCol != -1) question.setScore(getIntCellValue(row, scoreCol));
             if (sortOrderCol != -1) question.setSortOrder(getIntCellValue(row, sortOrderCol));
+            if (questionTypeIdCol != -1) question.setQuestionTypeId(getLongCellValue(row, questionTypeIdCol));
             
             questions.add(question);
         }
