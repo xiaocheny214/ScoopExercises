@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/score/v1")
+@RequestMapping("/api/score/v1")
 public class ScoreController {
 
 

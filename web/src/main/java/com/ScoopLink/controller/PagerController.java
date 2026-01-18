@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/pager/v1")
+@RequestMapping("/api/pager/v1")
 @RestController
 public class PagerController {
 

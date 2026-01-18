@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/bank/v1")
+@RequestMapping("/api/bank/v1")
 public class BankController {
 
     @Resource

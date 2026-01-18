@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/question/v1")
+@RequestMapping("/api/question/v1")
 @RestController
 @Slf4j
 public class QuestionController {

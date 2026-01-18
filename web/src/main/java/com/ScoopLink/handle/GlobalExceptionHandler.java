@@ -10,10 +10,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.NoHandlerFoundException;
+
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
+@ControllerAdvice(basePackages = "com.ScoopLink.controller") // 只处理controller包下的异常
 public class GlobalExceptionHandler {
 
     // 处理业务异常
@@ -72,9 +74,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    // 处理所有未捕获的异常
+    // 处理所有未捕获的异常 - 但排除静态资源相关异常
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception e, WebRequest request) {
+        // 如果是NoHandlerFoundException且是静态资源请求，不处理
+        if (e instanceof NoHandlerFoundException) {
+            String requestUri = request.getDescription(false);
+            if (isStaticResourceRequest(requestUri)) {
+                throw new RuntimeException(e);
+            }
+        }
+        
         ErrorResponse errorResponse = new ErrorResponse(
                 "系统内部错误: " + e.getMessage(),
                 "Internal Server Error",
@@ -83,5 +93,13 @@ public class GlobalExceptionHandler {
         );
         errorResponse.setSuccess(false);
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
+    private boolean isStaticResourceRequest(String requestUri) {
+        return requestUri.contains("/assets/") || requestUri.contains("/static/") || 
+               requestUri.contains(".js") || requestUri.contains(".css") || 
+               requestUri.contains(".png") || requestUri.contains(".jpg") || 
+               requestUri.contains(".svg") || requestUri.contains(".ico") ||
+               requestUri.contains("/vite.svg") || requestUri.contains("/favicon.ico");
     }
 }

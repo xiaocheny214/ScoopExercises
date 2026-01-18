@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/paper/v1/import")
+@RequestMapping("/api/paper/v1/import")
 public class PaperImportController {
     
     @Resource

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/Answer/v1")
+@RequestMapping("/api/Answer/v1")
 public class submitAnswerController {
 
 

@@ -11,7 +11,7 @@ import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/report/v1")
+@RequestMapping("/api/report/v1")
 public class ReportController {
 
     @Resource
