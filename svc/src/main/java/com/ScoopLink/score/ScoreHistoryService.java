@@ -142,7 +142,7 @@ public class ScoreHistoryService implements StatisticsScore {
             for (MultipleChoiceQuestion mcq : mcqList) {
                 // 查找对应的用户答案
                 UserAnswer userAnswer = userAnswerList.stream()
-                    .filter(ua -> ua.getQuestionId().equals(mcq.getId()) && ua.getQuestionType().equals("MULTIPLE_CHOICE"))
+                    .filter(ua -> ua.getQuestionId().equals(mcq.getId()))
                     .findFirst()
                     .orElse(null);
                 
@@ -178,7 +178,7 @@ public class ScoreHistoryService implements StatisticsScore {
             for (AnalysisQuestion aq : aqList) {
                 // 查找对应的用户答案
                 UserAnswer userAnswer = userAnswerList.stream()
-                    .filter(ua -> ua.getQuestionId().equals(aq.getId()) && ua.getQuestionType().equals("ANALYSIS"))
+                    .filter(ua -> ua.getQuestionId().equals(aq.getId()))
                     .findFirst()
                     .orElse(null);
                 
@@ -204,7 +204,7 @@ public class ScoreHistoryService implements StatisticsScore {
             for (EssayQuestion eq : eqList) {
                 // 查找对应的用户答案
                 UserAnswer userAnswer = userAnswerList.stream()
-                    .filter(ua -> ua.getQuestionId().equals(eq.getId()) && ua.getQuestionType().equals("ESSAY"))
+                    .filter(ua -> ua.getQuestionId().equals(eq.getId()))
                     .findFirst()
                     .orElse(null);
                 
