@@ -60,6 +60,9 @@ public class PaperImportServerImpl implements PaperImportServer {
             List<Long> analysis = qtList.stream().filter(qt -> qt.getTypeCode().equals("ANALYSIS"))
                     .map(QuestionType::getId)
                     .collect(Collectors.toList());
+            List<Long> singleChoice = qtList.stream().filter(qt -> qt.getTypeCode().equals("SINGLE_CHOICE"))
+                    .map(QuestionType::getId)
+                    .collect(Collectors.toList());
 
             // 首先计算总分和题目数量
             List<MultipleChoiceQuestion> mcqList = importTemplate.getMultipleChoiceQuestions();
@@ -97,7 +100,11 @@ public class PaperImportServerImpl implements PaperImportServer {
                 for (MultipleChoiceQuestion mcq : mcqList) {
                     // 设置试卷ID和题目类型ID
                     mcq.setPaperId(createdPaper.getId());
-                    mcq.setQuestionTypeId(multipleChoice.get(0));
+                    if(mcq.getCorrectAnswer().contains(",")) {
+                        mcq.setQuestionTypeId(multipleChoice.get(0));
+                    } else {
+                        mcq.setQuestionTypeId(singleChoice.get(0));
+                    }
                 }
                 multipleChoiceQuestionServer.CreateMultipleChoiceQuestions(mcqList);
             }
