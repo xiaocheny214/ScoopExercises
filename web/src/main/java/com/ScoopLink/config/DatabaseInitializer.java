@@ -225,7 +225,8 @@ public class DatabaseInitializer implements CommandLineRunner {
             "INSERT INTO question_types (type_code, type_name, description, icon, sort_order, is_active) VALUES " +
             "('MULTIPLE_CHOICE', 'Multiple Choice', 'Multiple Choice Question', 'mcq-icon', 1, TRUE), " +
             "('ANALYSIS', 'Analysis', 'Analysis Question', 'analysis-icon', 2, TRUE), " +
-            "('ESSAY', 'Essay', 'Essay Question', 'essay-icon', 3, TRUE)",
+            "('ESSAY', 'Essay', 'Essay Question', 'essay-icon', 3, TRUE), " +
+            "('SINGLE_CHOICE', 'Single Choice', 'Single Choice Question', 'scq-icon', 4, TRUE)",
 
             // 插入默认的管理员用户（密码为123456的BCrypt加密值）
             "INSERT INTO users (account, nickname, password) VALUES " +

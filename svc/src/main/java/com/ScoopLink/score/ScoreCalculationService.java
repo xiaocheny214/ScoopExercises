@@ -145,6 +145,11 @@ public class ScoreCalculationService implements SubmitAnswer {
             case "ANALYSIS":
                 AnalysisQuestion aq = analysisQuestionServer.GetAnalysisQuestion(questionId);
                 return aq != null ? aq.getCorrectAnswer() : null;
+
+            case "SINGLE_CHOICE":
+                //复用表单
+                MultipleChoiceQuestion singleChoiceQuestion = multipleChoiceQuestionServer.GetMultipleChoiceQuestion(questionId);
+                return singleChoiceQuestion != null ? singleChoiceQuestion.getCorrectAnswer() : null;
             default:
                 return null;
         }
@@ -160,7 +165,7 @@ public class ScoreCalculationService implements SubmitAnswer {
 
         switch (questionType) {
             case "MULTIPLE_CHOICE":
-                // 选择题：严格匹配答案，支持多个选项（如"A,C,D"）
+                // 多选题：严格匹配答案，支持多个选项（如"A,C,D"）
                 return compareMultipleChoiceAnswers(userAnswer, correctAnswer);
 
             case "ESSAY":
@@ -171,13 +176,30 @@ public class ScoreCalculationService implements SubmitAnswer {
                 // 分析题：使用更复杂的评分逻辑，考虑答案的完整性
                 return compareAnalysisAnswers(userAnswer, correctAnswer);
 
+            case "SINGLE_CHOICE":
+                // 单选题：直接验证答案
+                return compareSingleChoiceAnswers(userAnswer, correctAnswer);
+
             default:
                 return false;
         }
     }
+    /**
+     * 比较单选题答案
+     * @param userAnswer 用户答案
+     * @param correctAnswer 正确答案
+     * @return 是否正确
+     */
+    private boolean compareSingleChoiceAnswers(String userAnswer, String correctAnswer) {
+        // 去除空格并转换为小写进行比较
+        String userAns = userAnswer.trim().toLowerCase().replaceAll("\\s+", "");
+        String correctAns = correctAnswer.trim().toLowerCase().replaceAll("\\s+", "");
+        // 单选题直接比较
+        return userAns.equals(correctAns);
+    }
 
     /**
-     * 比较选择题答案
+     * 比较多选题答案
      * @param userAnswer 用户答案
      * @param correctAnswer 正确答案
      * @return 是否正确
@@ -187,21 +209,15 @@ public class ScoreCalculationService implements SubmitAnswer {
         String userAns = userAnswer.trim().toLowerCase().replaceAll("\\s+", "");
         String correctAns = correctAnswer.trim().toLowerCase().replaceAll("\\s+", "");
 
-        // 如果答案中包含逗号，表示多选题，需要比较选项集合
-        if (userAns.contains(",") || correctAns.contains(",")) {
             // 将答案分割成选项列表并排序后比较
-            Set<String> userOptions = Arrays.stream(userAns.split(","))
+        Set<String> userOptions = Arrays.stream(userAns.split(","))
                     .map(String::trim)
                     .collect(Collectors.toSet());
-            Set<String> correctOptions = Arrays.stream(correctAns.split(","))
+        Set<String> correctOptions = Arrays.stream(correctAns.split(","))
                     .map(String::trim)
                     .collect(Collectors.toSet());
 
-            return userOptions.equals(correctOptions);
-        } else {
-            // 单选题直接比较
-            return userAns.equals(correctAns);
-        }
+        return userOptions.equals(correctOptions);
     }
 
     /**
